@@ -137,9 +137,24 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">0</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">0</span></a>
+
+  </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
 
   </li>
   </ul>
@@ -173,7 +188,7 @@
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/06/hadoop/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/123.jpg">
       <meta itemprop="name" content="Dacong001">
       <meta itemprop="description" content="菜鸡的学习过程">
     </span>
@@ -475,6 +490,23 @@
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Dacong001
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/03/06/hadoop/" title="Hadoop">http://example.com/2022/03/06/hadoop/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
 
       <footer class="post-footer">
 
@@ -546,15 +578,17 @@
           站点概览
         </li>
       </ul>
-
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper%E3%80%81Reducer%EF%BC%8CDriver%E6%9E%84%E9%80%A0%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.</span> <span class="nav-text">Mapper、Reducer，Driver构造步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mapper%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">Mapper：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reducer%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">Reducer：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Driver%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">Driver：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3"><span class="nav-number">2.</span> <span class="nav-text">Job提交流程源码详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CombineTextInputFormat%E5%88%87%E7%89%87%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">CombineTextInputFormat切片机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">虚拟存储过程：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">MapReduce工作流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition%E5%88%86%E5%8C%BA"><span class="nav-number">5.</span> <span class="nav-text">Partition分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E6%80%BB%E7%BB%93"><span class="nav-number">5.1.</span> <span class="nav-text">分区总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WritableComparable%E6%8E%92%E5%BA%8F"><span class="nav-number">6.</span> <span class="nav-text">WritableComparable排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner%E5%90%88%E5%B9%B6"><span class="nav-number">7.</span> <span class="nav-text">Combiner合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OutputFormat%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA"><span class="nav-number">8.</span> <span class="nav-text">OutputFormat数据输出</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89OutputFormat%E7%B1%BB"><span class="nav-number">8.0.1.</span> <span class="nav-text">自定义OutputFormat类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">9.</span> <span class="nav-text">MapReduce内核源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MapTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-number">9.1.</span> <span class="nav-text">MapTask工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReduceTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-number">9.2.</span> <span class="nav-text">ReduceTask工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReduceTask%E5%B9%B6%E8%A1%8C%E5%BA%A6%E5%86%B3%E5%AE%9A%E6%9C%BA%E5%88%B6"><span class="nav-number">9.3.</span> <span class="nav-text">ReduceTask并行度决定机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Join-%E5%BA%94%E7%94%A8"><span class="nav-number">10.</span> <span class="nav-text">Join 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduce-Join"><span class="nav-number">10.1.</span> <span class="nav-text">Reduce Join</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map-Join"><span class="nav-number">10.2.</span> <span class="nav-text">Map Join</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ETL"><span class="nav-number">11.</span> <span class="nav-text">ETL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93"><span class="nav-number">12.</span> <span class="nav-text">MapReduce 开发总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9"><span class="nav-number">13.</span> <span class="nav-text">Hadoop 数据压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E7%9A%84%E5%A5%BD%E5%A4%84%E5%92%8C%E5%9D%8F%E5%A4%84%EF%BC%9A"><span class="nav-number">13.1.</span> <span class="nav-text">压缩的好处和坏处：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%8E%9F%E5%88%99%EF%BC%9A"><span class="nav-number">13.2.</span> <span class="nav-text">压缩原则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%96%B9%E5%BC%8F%E9%80%89%EF%BC%9A"><span class="nav-number">13.3.</span> <span class="nav-text">压缩方式选：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E4%BD%8D%E7%BD%AE%E9%80%89%E6%8B%A9%EF%BC%9A"><span class="nav-number">13.4.</span> <span class="nav-text">压缩位置选择：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%AE%9E%E4%BE%8B"><span class="nav-number">13.5.</span> <span class="nav-text">压缩实例</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper%E3%80%81Reducer%EF%BC%8CDriver%E6%9E%84%E9%80%A0%E6%AD%A5%E9%AA%A4"><span class="nav-text">Mapper、Reducer，Driver构造步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mapper%EF%BC%9A"><span class="nav-text">Mapper：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reducer%EF%BC%9A"><span class="nav-text">Reducer：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Driver%EF%BC%9A"><span class="nav-text">Driver：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Job%E6%8F%90%E4%BA%A4%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3"><span class="nav-text">Job提交流程源码详解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CombineTextInputFormat%E5%88%87%E7%89%87%E6%9C%BA%E5%88%B6"><span class="nav-text">CombineTextInputFormat切片机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-text">虚拟存储过程：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-text">MapReduce工作流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition%E5%88%86%E5%8C%BA"><span class="nav-text">Partition分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E5%8C%BA%E6%80%BB%E7%BB%93"><span class="nav-text">分区总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WritableComparable%E6%8E%92%E5%BA%8F"><span class="nav-text">WritableComparable排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner%E5%90%88%E5%B9%B6"><span class="nav-text">Combiner合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#OutputFormat%E6%95%B0%E6%8D%AE%E8%BE%93%E5%87%BA"><span class="nav-text">OutputFormat数据输出</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89OutputFormat%E7%B1%BB"><span class="nav-text">自定义OutputFormat类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-text">MapReduce内核源码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MapTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">MapTask工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReduceTask%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-text">ReduceTask工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReduceTask%E5%B9%B6%E8%A1%8C%E5%BA%A6%E5%86%B3%E5%AE%9A%E6%9C%BA%E5%88%B6"><span class="nav-text">ReduceTask并行度决定机制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Join-%E5%BA%94%E7%94%A8"><span class="nav-text">Join 应用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduce-Join"><span class="nav-text">Reduce Join</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map-Join"><span class="nav-text">Map Join</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ETL"><span class="nav-text">ETL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-%E5%BC%80%E5%8F%91%E6%80%BB%E7%BB%93"><span class="nav-text">MapReduce 开发总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9"><span class="nav-text">Hadoop 数据压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E7%9A%84%E5%A5%BD%E5%A4%84%E5%92%8C%E5%9D%8F%E5%A4%84%EF%BC%9A"><span class="nav-text">压缩的好处和坏处：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%8E%9F%E5%88%99%EF%BC%9A"><span class="nav-text">压缩原则：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E6%96%B9%E5%BC%8F%E9%80%89%EF%BC%9A"><span class="nav-text">压缩方式选：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E4%BD%8D%E7%BD%AE%E9%80%89%E6%8B%A9%EF%BC%9A"><span class="nav-text">压缩位置选择：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%AE%9E%E4%BE%8B"><span class="nav-text">压缩实例</span></a></li></ol></li></ol></div>
       </div>
+
       <!--/noindex-->
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dacong001"
+      src="/images/123.jpg">
   <p class="site-author-name" itemprop="name">Dacong001</p>
   <div class="site-description" itemprop="description">菜鸡的学习过程</div>
 </div>
@@ -569,9 +603,21 @@
       </div>
   </nav>
 </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dacong0001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dacong0001" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_50739598" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_50739598" rel="noopener" target="_blank"><i class="crosshairs fa-fw"></i>CSDN</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
 
 
 
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1451856375&auto=1&height=66"></iframe>
       </div>
 
     </div>
@@ -595,7 +641,7 @@
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">Dacong001</span>
+  <span class="author" itemprop="copyrightHolder">大葱</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
@@ -653,3 +699,5 @@
 
 </body>
 </html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
