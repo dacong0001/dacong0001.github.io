@@ -544,7 +544,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-06 18:45:28 / 修改时间：19:43:06" itemprop="dateCreated datePublished" datetime="2022-03-06T18:45:28+08:00">2022-03-06</time>
+              <time title="创建时间：2022-03-06 18:45:28 / 修改时间：20:24:19" itemprop="dateCreated datePublished" datetime="2022-03-06T18:45:28+08:00">2022-03-06</time>
             </span>
 
           
@@ -574,32 +574,40 @@
 <p><strong>MapTask并行度决定机制</strong></p>
 <p><strong>数据块：</strong>Block是HDFS物理上把数据分成一块一块。数据块是HDFS存储数据单位。</p>
 <p><strong>数据切片：</strong>数据切片只是在逻辑上对输入进行分片，并不会在磁盘上将其切分成片进行存储。数据切片是MapReduce程序计算输入数据的单位，一个切片会对应启动一个MapTask。</p>
-<p><img src="/.%5Chadoop%5C1646563177298.png" alt="1646563177298"></p>
+<img src="/2022/03/06/hadoop/1646563177298.png" class="" width="1646563177298">
+
 <p>​    如果分为100M的话 DataNode2还要从 1 中获取 28M与自己的100M进行合并运算，中间有传输时间和合并时间，效率低，所以要根据块的大小来设置切片大小。</p>
 <h3 id="Job提交流程源码详解"><a href="#Job提交流程源码详解" class="headerlink" title="Job提交流程源码详解"></a><strong>Job提交流程源码详解</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">waitForCompletion()</span><br><span class="line"></span><br><span class="line">submit();</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">// 1建立连接</span><br><span class="line"></span><br><span class="line">​	connect();	</span><br><span class="line"></span><br><span class="line">​		// 1）创建提交Job的代理</span><br><span class="line"></span><br><span class="line">​		new Cluster(getConfiguration());</span><br><span class="line"></span><br><span class="line">​			// （1）判断是本地运行环境还是yarn集群运行环境</span><br><span class="line"></span><br><span class="line">​			initialize(jobTrackAddr, conf);   //返回0是本地  1是yarn</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">// 2 提交job</span><br><span class="line"></span><br><span class="line">submitter.submitJobInternal(Job.this, cluster)</span><br><span class="line"></span><br><span class="line"> 	首先检察输出路径是否存在（会抛出异常 1.为空（没有填写输出路径），2.路径存在）</span><br><span class="line"></span><br><span class="line">​	// 1）创建给集群提交数据的Stag路径（临时缓存路径）</span><br><span class="line"></span><br><span class="line">​	Path jobStagingArea = JobSubmissionFiles.getStagingDir(cluster, conf);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​	// 2）获取jobId（每一个job都有一个id） ，并创建Job路径  在上一步的Stag路径后加上jobID</span><br><span class="line"></span><br><span class="line">​	JobID jobId = submitClient.getNewJobID();</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​	// 3）拷贝jar包到集群</span><br><span class="line"></span><br><span class="line">	copyAndConfigureFiles(job, submitJobDir);	 //本地模式不会提交jar  集群模式会提交</span><br><span class="line"></span><br><span class="line">	rUploader.uploadFiles(job, jobSubmitDir);</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​	// 4）计算切片，生成切片规划文件</span><br><span class="line"></span><br><span class="line">​		writeSplits(job, submitJobDir);</span><br><span class="line"></span><br><span class="line">​		maps = writeNewSplits(job, jobSubmitDir);   //根据切片信息生产几个mapTask</span><br><span class="line"></span><br><span class="line">​		input.getSplits(job);      //把切片信息保存到 jobID路径</span><br><span class="line">	根基切片个数生成几个map   并把切片信息以log方式输出，在执行日志中也可以看见</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">​	// 5）向Stag路径写XML配置文件</span><br><span class="line"></span><br><span class="line">writeConf(conf, submitJobFile);    //任然保存到JobID下的路径 </span><br><span class="line"></span><br><span class="line">​	conf.writeXml(out); </span><br><span class="line"></span><br><span class="line">​	// 6）提交Job,返回提交状态</span><br><span class="line"></span><br><span class="line">status = submitClient.submitJob(jobId, submitJobDir.toString(), job.getCredentials());</span><br><span class="line">//提交完毕后会将刚才生产的缓存文件删除	</span><br></pre></td></tr></table></figure>
 
 <p>最终提交信息为：</p>
-<p><img src="/.%5Chadoop%5C1646528945437.png" alt="1646528945437"></p>
-<p><img src="/.%5Chadoop%5C1646471050412.png" alt="1646471050412"></p>
-<p><img src="/.%5Chadoop%5C1646563186420.png" alt="1646563186420"></p>
-<p><img src="/.%5Chadoop%5C1646563193170.png" alt="1646563193170"></p>
+<img src="/2022/03/06/hadoop/1646528945437.png" class="" width="1646528945437">
+
+<img src="/2022/03/06/hadoop/1646471050412.png" class="" width="1646471050412">
+
+<img src="/2022/03/06/hadoop/1646563186420.png" class="" width="1646563186420">
+
+<img src="/2022/03/06/hadoop/1646563193170.png" class="" width="1646563193170">
+
 <p>minSize &#x3D; 1; maxSize &#x3D; long的最大值    bolckSize &#x3D; 128m  （在本地运行为32m）</p>
 <p><strong>TextInputFormat</strong></p>
 <p>​        TextInputFormat是默认的FileInputFormat实现类。按行读取每条记录。键是存储该行在整个文件中的起始字节偏移量， LongWritable类型。值是这行的内容，不包括任何行终止符（换行符和回车符），Text类型。</p>
-<p><img src="/.%5C1646470491592.png" alt="1646470491592"></p>
+<p><img src="/1646470491592.png" alt="1646470491592"></p>
 <h3 id="CombineTextInputFormat切片机制"><a href="#CombineTextInputFormat切片机制" class="headerlink" title="CombineTextInputFormat切片机制"></a><strong>CombineTextInputFormat</strong>切片机制</h3><p>​    CombineTextInputFormat用于小文件过多的场景，它可以将多个小文件从逻辑上规划到一个切片中，这样，多个小文件就可以交给一个MapTask处理。</p>
 <p><strong>虚拟存储切片最大值设置：</strong><font color='cornflowerblue'>CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);&#x2F;&#x2F; 4m</font></p>
 <p><font color='orange'>注意：虚拟存储切片最大值设置最好根据实际的小文件大小情况来设置具体的值。</font></p>
 <p><strong>切片机制：</strong></p>
 <p>​    生成切片过程包括：虚拟存储过程和切片过程二部分。</p>
-<p><img src="/.%5Chadoop%5C1646563201262.png" alt="1646563201262"></p>
+<img src="/2022/03/06/hadoop/1646563201262.png" class="" width="1646563201262">
+
 <h4 id="虚拟存储过程："><a href="#虚拟存储过程：" class="headerlink" title="虚拟存储过程："></a>虚拟存储过程：</h4><p>​    将输入目录下所有文件大小，依次和设置的setMaxInputSplitSize值比较，如果不大于设置的最大值，逻辑上划分一个块。如果输入文件大于设置的最大值且大于两倍，那么以最大值切割一块；当剩余数据大小超过设置的最大值且不大于最大值2倍，此时将文件均分成2个虚拟存储块（防止出现太小切片）。</p>
 <p>​    例如setMaxInputSplitSize值为4M，输入文件大小为8.02M，则先逻辑上分成一个4M。剩余的大小为4.02M，如果按照4M逻辑划分，就会出现0.02M的小的虚拟存储文件，所以将剩余的4.02M文件切分成（2.01M和2.01M）两个文件。</p>
 <p><strong>例：</strong></p>
 <p>​    输入数据为4个小文件，在不经过任何处理运行时切片个数为4个，当在Driver中增加<code>CombineTextInputFormat.setMaxInputSplitSize(job, 4194304); </code>时，切片个数为为3个</p>
 <p>当将大小改为 20971520（20m）时切片各个变为1个。只产生一个MapTask提高了效率。</p>
-<h3 id="MapReduce工作流程"><a href="#MapReduce工作流程" class="headerlink" title="MapReduce工作流程"></a>MapReduce工作流程</h3><p><img src="/.%5Chadoop%5C1646563207533.png" alt="1646563207533"></p>
-<p><img src="/.%5Chadoop%5C1646563211839.png" alt="1646563211839"></p>
+<h3 id="MapReduce工作流程"><a href="#MapReduce工作流程" class="headerlink" title="MapReduce工作流程"></a>MapReduce工作流程</h3><img src="/2022/03/06/hadoop/1646563207533.png" class="" width="1646563207533">
+
+<img src="/2022/03/06/hadoop/1646563211839.png" class="" width="1646563211839">
+
 <p>上面的流程是整个MapReduce最全工作流程，但是Shuffle过程只是从第7步开始到第16步结束，具体Shuffle过程详解，如下：</p>
 <p>（1）MapTask收集我们的map()方法输出的kv对，放到内存缓冲区中</p>
 <p>（2）从内存缓冲区不断溢出本地磁盘文件，可能会溢出多个文件</p>
@@ -612,10 +620,11 @@
 <p>（1）Shuffle中的缓冲区大小会影响到MapReduce程序的执行效率，原则上说，缓冲区越大，磁盘io的次数越少，执行速度就越快。</p>
 <p>（2）缓冲区的大小可以通过参数调整，参数：mapreduce.task.io.sort.mb默认100M。</p>
 <p><strong>Map 方法之后，Reduce 方法之前的数据处理过程称之为 Shuffer</strong></p>
-<p><img src="/.%5Chadoop%5C1646563217632.png" alt="1646563217632"></p>
+<img src="/2022/03/06/hadoop/1646563217632.png" class="" width="1646563217632">
+
 <h3 id="Partition分区"><a href="#Partition分区" class="headerlink" title="Partition分区"></a>Partition分区</h3><p>​    默认分区是根据key的hashCode对ReduceTasks个数取模得到的。用户没法控制哪个key存储到哪个分区。</p>
-<p><img src="/.%5C1646472095363.png" alt="1646472095363"></p>
-<p>!<img src="/.%5C1646472279827.png" alt="1646472279827">(.\1646472264084.png)</p>
+<p><img src="/1646472095363.png" alt="1646472095363"></p>
+<p>!<img src="/1646472279827.png" alt="1646472279827">(1646472264084.png)</p>
 <p><strong>KV设置为map输出的KV</strong></p>
 <h4 id="分区总结"><a href="#分区总结" class="headerlink" title="分区总结"></a>分区总结</h4><ol>
 <li><p>如果RedhceTask的数量 &gt; getPantition的结果数，则会多产生几个空的输出文件part-r-000xx;</p>
@@ -625,10 +634,11 @@
 <li><p>如果ReduceTask的数量 &#x3D; 1，<strong>不执行分区操作，在执行之前首先要判断ReduceTas数量是否为1</strong>最终结果都交给这一个ReduceTask，最终也就只会产生一个结果文件part-r-00000;</p>
 </li>
 <li><p>分区号必须从零开始，逐一累加。</p>
-<p><img src="/.%5C1646472445540.png" alt="1646472445540"></p>
+<p><img src="/1646472445540.png" alt="1646472445540"></p>
 </li>
 </ol>
-<h3 id="WritableComparable排序"><a href="#WritableComparable排序" class="headerlink" title="WritableComparable排序"></a>WritableComparable排序</h3><p><img src="/.%5Chadoop%5C1646563228969.png" alt="1646563228969"></p>
+<h3 id="WritableComparable排序"><a href="#WritableComparable排序" class="headerlink" title="WritableComparable排序"></a>WritableComparable排序</h3><img src="/2022/03/06/hadoop/1646563228969.png" class="" width="1646563228969">
+
 <ol>
 <li>部分排序<br>MapReduce根据输入记录的键对数据集排序。保证输出的每个文件内部有序。</li>
 <li>全排序<br>最终输出结果只有一个文件，且文件内部有序。实现方式是只设置一个ReduceTask。但该方法在处理大型文件时效率极低，因为一台机器处理所有文件，完全丧失了MapReduce所提供的并行架构。</li>
@@ -660,7 +670,8 @@
 <li>​    在构造函数中获取传来的job，定义输出流（写出路径），重写writer&lt;K,V&gt;方法，根据条件选择输出流。</li>
 <li>​    在close（）方法中关闭创建的输出流。</li>
 </ul>
-<h3 id="MapReduce内核源码解析"><a href="#MapReduce内核源码解析" class="headerlink" title="MapReduce内核源码解析"></a>MapReduce内核源码解析</h3><h4 id="MapTask工作机制"><a href="#MapTask工作机制" class="headerlink" title="MapTask工作机制"></a>MapTask工作机制</h4><p><img src="/.%5Chadoop%5C1646563236218.png" alt="1646563236218"></p>
+<h3 id="MapReduce内核源码解析"><a href="#MapReduce内核源码解析" class="headerlink" title="MapReduce内核源码解析"></a>MapReduce内核源码解析</h3><h4 id="MapTask工作机制"><a href="#MapTask工作机制" class="headerlink" title="MapTask工作机制"></a>MapTask工作机制</h4><img src="/2022/03/06/hadoop/1646563236218.png" class="" width="1646563236218">
+
 <ul>
 <li><font color='red'>Read阶段</font>：MapTask通过InputFormat获得的RecordReader，从输入InputSplit中解析出一个个key&#x2F;value。</li>
 <li><font color='red'>Map阶段</font>：该节点主要是将解析出的key&#x2F;value交给用户编写map()函数处理，并产生一系列新的key&#x2F;value。</li>
@@ -678,7 +689,7 @@
 <p>​    让每个MapTask最终只生成一个数据文件，可避免同时打开大量文件和同时读取大量小文件产生的随机读取带来的开销。</p>
 </li>
 </ul>
-<h4 id="ReduceTask工作机制"><a href="#ReduceTask工作机制" class="headerlink" title="ReduceTask工作机制"></a><strong>ReduceTask工作机制</strong></h4><p><img src="/.%5C1646529956381.png" alt="img"></p>
+<h4 id="ReduceTask工作机制"><a href="#ReduceTask工作机制" class="headerlink" title="ReduceTask工作机制"></a><strong>ReduceTask工作机制</strong></h4><p><img src="/1646529956381.png" alt="img"></p>
 <ol>
 <li>Copy阶段：ReduceTask从各个MapTask上远程拷贝一片数据，并针对某一片数据，如果其大小超过一定阈值，则写到磁盘上，否则直接放到内存中。</li>
 <li>Sort阶段：在远程拷贝数据的同时，ReduceTask启动了两个后台线程对内存和磁盘上的文件进行合并，以防止内存使用过多或磁盘上文件过多。按照MapReduce语义，用户编写reduce()函数输入数据是按key进行聚集的一组数据。为了将key相同的数据聚在一起，Hadoop采用了基于排序的策略。由于各个MapTask已经实现对自己的处理结果进行了局部排序，因此，ReduceTask只需对所有数据进行一次归并排序即可。</li>
@@ -689,7 +700,8 @@
 <p>ReduceTask数量的决定是可以直接手动设置：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 默认值是1，手动设置为4</span><br><span class="line">job.setNumReduceTasks(4);</span><br></pre></td></tr></table></figure>
 
-<p><img src="/.%5Chadoop%5C1646563282412.png" alt="1646563282412"></p>
+<img src="/2022/03/06/hadoop/1646563282412.png" class="" width="1646563282412">
+
 <h3 id="Join-应用"><a href="#Join-应用" class="headerlink" title="Join 应用"></a><strong>Join</strong> <strong>应用</strong></h3><h4 id="Reduce-Join"><a href="#Reduce-Join" class="headerlink" title="Reduce Join"></a><strong>Reduce Join</strong></h4><p>​    Map 端的主要工作：为来自不同表或文件的 key&#x2F;value 对，打标签以区别不同来源的记 </p>
 <p>录。然后用连接字段作为 key，其余部分和新加的标志作为 value，最后进行输出。 </p>
 <p>​     Reduce 端的主要工作：在 Reduce 端以连接字段作为 key 的分组已经完成，我们只需要 </p>
@@ -734,7 +746,8 @@
 <p>​    （2）IO 密集型的 Job，多用压缩 </p>
 <h4 id="压缩方式选："><a href="#压缩方式选：" class="headerlink" title="压缩方式选："></a><strong>压缩方式选：</strong></h4><p>​    压缩方式选择时重点考虑：<strong>压缩&#x2F;解压缩速度、压缩率（压缩后存储大小）、压缩后是否可以支持切片</strong>。</p>
 <h4 id="压缩位置选择："><a href="#压缩位置选择：" class="headerlink" title="压缩位置选择："></a><strong>压缩位置选择：</strong></h4><p>​    压缩可以在 MapReduce 作用的任意阶段启用。 </p>
-<p><img src="/.%5Chadoop%5C1646563292818.png" alt="1646563292818"></p>
+<img src="/2022/03/06/hadoop/1646563292818.png" class="" width="1646563292818">
+
 <table>
 <thead>
 <tr>
