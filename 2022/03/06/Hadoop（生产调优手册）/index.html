@@ -22,19 +22,18 @@
 
   <meta name="description" content="HDFS—核心参数NameNode 内存生产配置1）NameNode 内存计算    每个文件块大概占用 150byte，一台服务器 128G 内存为例，能存储多少文件块呢？128 * 1024 * 1024 * 1024 &#x2F; 150Byte ≈ 9.1 亿 2）Hadoop2.x 系列，配置 NameNode 内存    NameNode 内存默认 2000m，如果服务器内存 4G，N">
 <meta property="og:type" content="article">
-<meta property="og:title" content="大葱的笔记">
+<meta property="og:title" content="Hadoop 生产调优手册">
 <meta property="og:url" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/index.html">
 <meta property="og:site_name" content="大葱的笔记">
 <meta property="og:description" content="HDFS—核心参数NameNode 内存生产配置1）NameNode 内存计算    每个文件块大概占用 150byte，一台服务器 128G 内存为例，能存储多少文件块呢？128 * 1024 * 1024 * 1024 &#x2F; 150Byte ≈ 9.1 亿 2）Hadoop2.x 系列，配置 NameNode 内存    NameNode 内存默认 2000m，如果服务器内存 4G，N">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646549131508-1646562909757.png">
-<meta property="og:image" content="http://example.com/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646549248154.png">
 <meta property="og:image" content="c:/Users/26959/AppData/Roaming/Typora/typora-user-images/1646549566406.png">
-<meta property="og:image" content="http://example.com/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553722796.png">
-<meta property="og:image" content="http://example.com/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553737485.png">
-<meta property="og:image" content="http://example.com/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553806181.png">
+<meta property="og:image" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553722796.png">
+<meta property="og:image" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553737485.png">
+<meta property="og:image" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553806181.png">
 <meta property="article:published_time" content="2022-03-06T10:45:27.767Z">
-<meta property="article:modified_time" content="2022-03-06T11:42:47.283Z">
+<meta property="article:modified_time" content="2022-03-06T12:53:07.676Z">
 <meta property="article:author" content="Dacong001">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646549131508-1646562909757.png">
@@ -52,7 +51,7 @@
   };
 </script>
 
-  <title> | 大葱的笔记</title>
+  <title>Hadoop 生产调优手册 | 大葱的笔记</title>
   
 
 
@@ -171,7 +170,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          Hadoop 生产调优手册
         </h1>
 
         <div class="post-meta">
@@ -182,7 +181,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-03-06 18:45:27 / 修改时间：19:42:47" itemprop="dateCreated datePublished" datetime="2022-03-06T18:45:27+08:00">2022-03-06</time>
+              <time title="创建时间：2022-03-06 18:45:27 / 修改时间：20:53:07" itemprop="dateCreated datePublished" datetime="2022-03-06T18:45:27+08:00">2022-03-06</time>
             </span>
 
           
@@ -216,7 +215,8 @@
 <h3 id="开启回收站配置"><a href="#开启回收站配置" class="headerlink" title="开启回收站配置"></a><strong>开启回收站配置</strong></h3><p>​    开启回收站功能，可以将删除的文件在不超时的情况下，恢复原数据，起到防止误删除、 </p>
 <p>备份等作用。 </p>
 <p><strong>1）回收站工作机制</strong></p>
-<p><img src="/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646549248154.png" alt="1646549248154"><strong>2****）开启</strong>2)回收站功能参数说明**</p>
+回收站功能参数说明**
+
 <p>（1）默认值 fs.trash.interval &#x3D; 0，0 表示禁用回收站；其他值表示设置文件的存活时间。 </p>
 <p>（2）默认值 fs.trash.checkpoint.interval &#x3D; 0，检查回收站的间隔时间。如果该值为 0，则该 </p>
 <p>值设置和 fs.trash.interval 的参数值相等。 </p>
@@ -327,14 +327,17 @@
 <p>3）第一次添加黑名单必须重启集群，不是第一次，只需要刷新 NameNode 节点即可</p>
 <p>4）检查 Web 浏览器，退役节点的状态为 decommission in progress（退役中），说明数据 </p>
 <p>节点正在复制块到其他节点 </p>
-<p><img src="/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553722796.png" alt="1646553722796"></p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553722796.png" class="" width="1646553722796">
+
 <p>5<strong>）等待退役节点状态为</strong> decommissioned<strong>（所有块已经复制完成），停止该节点及节点资源</strong> </p>
 <p>管理器。注意：如果副本数是 3<strong>，服役的节点小于等于</strong> 3<strong>，是不能退役成功的，需要修改</strong> </p>
 <p>副本数后才能退役</p>
-<p><img src="/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553737485.png" alt="1646553737485"></p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553737485.png" class="" width="1646553737485">
+
 <p>6）如果数据不均衡，可以用命令实现集群的再平衡</p>
 <h2 id="HDFS—存储优化"><a href="#HDFS—存储优化" class="headerlink" title="HDFS—存储优化"></a>HDFS—存储优化</h2><h3 id="纠删码原理"><a href="#纠删码原理" class="headerlink" title="纠删码原理"></a><strong>纠删码原理</strong></h3><p>​    HDFS 默认情况下，一个文件有 3 个副本，这样提高了数据的可靠性，但也带来了 2 倍的冗余开销。Hadoop3.x 引入了纠删码，采用计算的方式，可以节省约 50％左右的存储空间</p>
-<p><img src="/.%5CHadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89%5C1646553806181.png" alt="1646553806181"></p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553806181.png" class="" width="1646553806181">
+
 
     </div>
 
@@ -349,13 +352,10 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2022/03/06/yarn/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/03/06/hadoop/" rel="next" title="">
-       <i class="fa fa-chevron-right"></i>
+    <a href="/2022/03/06/hadoop/" rel="next" title="Hadoop">
+      Hadoop <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
