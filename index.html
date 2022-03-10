@@ -130,7 +130,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">5</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">6</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -183,6 +183,159 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/09/SQL%E5%9F%BA%E7%A1%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/123.jpg">
+      <meta itemprop="name" content="Dacong001">
+      <meta itemprop="description" content="菜鸡的学习过程">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大葱的笔记">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/" class="post-title-link" itemprop="url">SQL基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-03-09 19:49:06 / 修改时间：22:08:33" itemprop="dateCreated datePublished" datetime="2022-03-09T19:49:06+08:00">2022-03-09</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="MYSQL函数"><a href="#MYSQL函数" class="headerlink" title="MYSQL函数"></a>MYSQL函数</h1><p><code>select 函数名（） from 表 </code></p>
+<h2 id="单行函数："><a href="#单行函数：" class="headerlink" title="单行函数："></a><strong>单行函数：</strong></h2><h3 id="字符函数："><a href="#字符函数：" class="headerlink" title="字符函数："></a>字符函数：</h3><ul>
+<li>length（str）：返回参数值的字节个数</li>
+<li>concat（str1，‘-‘，str2）： 拼接字符串</li>
+<li>upper：转大写</li>
+<li>lower：转小写</li>
+<li>substr（str，num1,num2）（str，num）：截取字符串</li>
+<li>instr（str1，str2）：返回str2在str1里的起始索引，找不到返回0</li>
+<li>trim（str）（c from str）：去前后空格（c）</li>
+<li>lpad（str，num，c）：用指定的字符实现<font color='red'>左</font>填充指定长度</li>
+<li>rpad（str，num，c）：用指定的字符实现<font color='red'>右</font>填充指定长度</li>
+<li>replace（str1，str2，str3）：用str3替换str1里面存在的str2字符串</li>
+</ul>
+<h3 id="数学函数："><a href="#数学函数：" class="headerlink" title="数学函数："></a>数学函数：</h3><ul>
+<li>round（num，x）：四舍五入保留x位小数</li>
+<li>ceil（num）：向上取整，返回&gt;&#x3D;num的最小整数 ，1.0001也是2</li>
+<li>floor（num）:向下取整</li>
+<li>truncate（num，x）：截断，小数后保留x位</li>
+<li>mod（num，x）：取余   相当于  %    num%x</li>
+</ul>
+<h3 id="日期函数："><a href="#日期函数：" class="headerlink" title="日期函数："></a>日期函数：</h3><ul>
+<li><p>now（）：返回当前时间 包括时间</p>
+</li>
+<li><p>curdate（）：返回日期不包含时间</p>
+</li>
+<li><p>curtime（）：返回时间，不包括日期</p>
+</li>
+<li><p>year（now（））：返回年。 月（month、monthname（月名字））） 日   小时  分钟  秒一样</p>
+</li>
+<li><p>str_to_date:将日期格式的字符转换为指定格式 。 <font color='green'>str_to_date(‘9-13-1993’,’%m-%d-%Y’); —-  1993-09-13</font></p>
+<img src="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/1646827945093.png" class="" width="1646827945093">
+
+
+</li>
+<li><p>date_format:将日期转换为字符串     <font color='green'>date_format(now(),’%y年%每月%d日’)；   22年09月09日</font>其他函数：</p>
+</li>
+<li><p>version():查看版本号</p>
+</li>
+<li><p>database（）：查看当前数据库</p>
+</li>
+<li><p>user（）：查看当前用户</p>
+</li>
+</ul>
+<h3 id="流程控制函数："><a href="#流程控制函数：" class="headerlink" title="流程控制函数："></a>流程控制函数：</h3><ul>
+<li><p>if函数：if   else    的效果</p>
+<p><font color='green'>select if （10 &gt; 5  ,’da’,’xiao’);     da</font>\</p>
+</li>
+<li><p>case函数     <font color='green'>select  原始工资，dep_id，case dep_id when 30 then salary * 1.1 when 40 then salary*1.2 else salary end as 新工资 from emp；</font></p>
+</li>
+</ul>
+<h2 id="分组函数："><a href="#分组函数：" class="headerlink" title="分组函数："></a>分组函数：</h2><p>用做统计使用，又称聚合函数或组函数</p>
+<p>有  <font color='green'> sum  avg  count max  min </font>。</p>
+<p>特点：</p>
+<ul>
+<li>sum，avg一般用于处理数值函数</li>
+<li>max ，min，count 可 用于任何函数</li>
+<li>所有分组函数都忽略null值</li>
+<li>可以和distinct（去重）搭配：<ul>
+<li><font color='green'>select sum(distinct salary) ,sum(salary) from emp;    39666    1520</font></li>
+</ul>
+</li>
+<li>count函数的详细介绍<ul>
+<li>count(*) 查询总行数  count（常量） 也是统计总行数，其就是添加了一列都是常量</li>
+<li>MYISAM存储下，count（*）的效率高  INNODB存储下  count(**)与 count(1)一样</li>
+</ul>
+</li>
+<li>和分组函数一同查询的字段有限制，要求是group  by  后的字段</li>
+</ul>
+<h2 id="分页查询（limit）："><a href="#分页查询（limit）：" class="headerlink" title="分页查询（limit）："></a>分页查询（limit）：</h2><p>应用场景：当要显示的数据，一页显示不全，需要分页提交sql请求。</p>
+<p>limit（offset，size）：offset要显示的起始索引<font color='red'>（从0开始）</font>，size要显示的条目个数</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>limit语句要放在查询的最后</li>
+<li>公式：<ul>
+<li>要显示的页数page，每页的条目数size。 select 查询列表  from  表  limit （page-1）*size，size；</li>
+</ul>
+</li>
+</ul>
+<p>查询语句中的关键字和顺序：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">select *         7</span><br><span class="line">from 表          1</span><br><span class="line">join 表2         2</span><br><span class="line">on 连接条件       3</span><br><span class="line">where  筛选条件   4</span><br><span class="line">group by 字段    5</span><br><span class="line">having  筛选条    6</span><br><span class="line">order by  字     8</span><br><span class="line">limit            9</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -1553,7 +1706,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1611,13 +1764,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">31k</span>
+    <span title="站点总字数">32k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">28 分钟</span>
+    <span title="站点阅读时长">29 分钟</span>
 </div>
 
         
