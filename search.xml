@@ -1,439 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>链表，二叉树</title>
-    <url>/2022/03/06/hello/</url>
-    <content><![CDATA[<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><h2 id="创建链表"><a href="#创建链表" class="headerlink" title="创建链表"></a>创建链表</h2><p><strong>用Node节点来进行数据保存，创建一个专门的类来进行管理，客户端不操作Node。</strong>应该对Node类进行包装处理，定义出操作标准。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">ILink</span>&lt;E&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> Object [] toArray();</span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(<span class="type">int</span> index,Object data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(E data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(E data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkImpl</span>&lt;E&gt; <span class="keyword">implements</span> <span class="title class_">ILink</span>&lt;E&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">Node</span>&#123;   <span class="comment">//保存节点的数据关系</span></span><br><span class="line">        <span class="keyword">private</span> E data;   <span class="comment">//保存数据</span></span><br><span class="line">        <span class="keyword">private</span> Node next;    <span class="comment">//保存下一个引用</span></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(E data)</span>&#123;  <span class="comment">//有数据才有意义</span></span><br><span class="line">            <span class="built_in">this</span>.data = data;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">addNode</span><span class="params">(Node newNode)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.next == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="built_in">this</span>.next == newNode;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.next.addNode(newNode)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//第一次调用： this = LinkImpl.root</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">toArrayNode</span><span class="params">()</span>&#123;</span><br><span class="line">            LinkImpl.<span class="built_in">this</span>.returnData[LinkImpl.<span class="built_in">this</span>.foot++] = <span class="built_in">this</span>.data;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.next)&#123;</span><br><span class="line">                <span class="built_in">this</span>.next.toArrayNode();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> E <span class="title function_">getNode</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(LinkImpl.<span class="built_in">this</span>.foot++ == index)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.data;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.next.getNode(index);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNode</span><span class="params">(<span class="type">int</span> index,Object data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(LinkImpl.<span class="built_in">this</span>.foot++ == index)&#123;</span><br><span class="line">                <span class="built_in">this</span>.data = data;  <span class="comment">//修改数据</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.next.setNode(index,data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">containsNode</span><span class="params">(Object data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.data.equals(data))&#123;    <span class="comment">//对象比较</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.next==<span class="literal">null</span>)&#123;   <span class="comment">//没有后续节点</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                    retrun  <span class="built_in">this</span>.next.containsNode(data);  <span class="comment">//向后继续寻找</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeNode</span><span class="params">(Node pre , E data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.data.equals(data))&#123;</span><br><span class="line">                pre.next = <span class="built_in">this</span>.next;  <span class="comment">//空出当前节点</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.next!=<span class="literal">null</span>)&#123;  <span class="comment">//有后续节点</span></span><br><span class="line">                    <span class="built_in">this</span>.next.removeNode(<span class="built_in">this</span>,data);  <span class="comment">//向后继续删除</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//  -----以下为Link类中定义的成员-----</span></span><br><span class="line">    <span class="keyword">private</span> Node root;  <span class="comment">//保存根元素</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;  <span class="comment">//统计个数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> foot;  <span class="comment">//定义下标</span></span><br><span class="line">    <span class="keyword">private</span> Object [] returnData;  <span class="comment">//定义返回数组</span></span><br><span class="line">    <span class="comment">//  -----以下为Link类中定义的方法-----</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(e==<span class="literal">null</span>)&#123;   <span class="comment">//如果保存数据为空至极返回</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Node newNode <span class="keyword">new</span> <span class="title class_">Node</span>(e);  <span class="comment">//创建一个新的节点</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.root == <span class="literal">null</span>)&#123;       </span><br><span class="line">            <span class="built_in">this</span>.root = newNode;   <span class="comment">//如果节点为空则将新的节点作为根节点</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.root.addNode(newNode);    <span class="comment">//否则存入下一节点</span></span><br><span class="line">        &#125;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> count==<span class="number">0</span>;     <span class="comment">// 1.判断数据是否为0</span></span><br><span class="line">       	<span class="comment">//return root==null;  //2.判断根节点是否为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Object [] toArray()&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.root==<span class="literal">null</span>)&#123;    <span class="comment">//如果为空直接返回</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>;  <span class="comment">//脚标清零</span></span><br><span class="line">        <span class="built_in">this</span>.returnData = <span class="keyword">new</span> <span class="title class_">Object</span>[<span class="built_in">this</span>.count];  <span class="comment">//根据已有长度开辟数组</span></span><br><span class="line">        <span class="built_in">this</span>.root.toArrayNode();  <span class="comment">//进行递归保存数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.returnData;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(index &gt;= <span class="built_in">this</span>.count)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>; <span class="comment">//索引清零</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.getNode(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(<span class="type">int</span> index,Object data)</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(index &gt;= <span class="built_in">this</span>.count)&#123;</span><br><span class="line">            <span class="keyword">return</span>;  <span class="comment">//退出</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>; <span class="comment">//索引清零</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.setNode(index,data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(Object data)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">null</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;  <span class="comment">//没有数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.containsNode(data)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(E data)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.contains(data))&#123;  <span class="comment">//判断数据是否存在</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.root.data.equals(data))&#123;  <span class="comment">//判断是否为根节点</span></span><br><span class="line">                <span class="built_in">this</span>.root = <span class="built_in">this</span>.root.next;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.root.next.removeNode(<span class="built_in">this</span>.root,data);  <span class="comment">//交个Node类来处理</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">this</span>.count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.root = <span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-<h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><h2 id="反转链表"><a href="#反转链表" class="headerlink" title="反转链表"></a>反转链表</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> ListNode <span class="title function_">reverse</span><span class="params">(ListNode head)</span> &#123;   <span class="comment">//head  : 1-&gt;2-&gt;3</span></span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">prev</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (head != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">next</span> <span class="operator">=</span> head.next;  <span class="comment">//指向下一个节点  2-&gt;3  // 3</span></span><br><span class="line">        head.next = prev;  <span class="comment">//head.next = null;    //head.next = 1</span></span><br><span class="line">        prev = head;    <span class="comment">// prev = 1 -&gt;null        //prev = 2-&gt;1-&gt;null</span></span><br><span class="line">        head = next;   <span class="comment">//  head = 2-&gt;3            //head = 3</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>主要思想为创建一个新的链表，让head节点的内容一直指向新链表的头部</li>
-</ul>
-<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="二叉树的深度"><a href="#二叉树的深度" class="headerlink" title="二叉树的深度"></a>二叉树的深度</h2><h3 id="1-遍历"><a href="#1-遍历" class="headerlink" title="1.遍历"></a>1.遍历</h3><p>+++</p>
-<h4 id="a-先序遍历："><a href="#a-先序遍历：" class="headerlink" title="a.先序遍历："></a>a.先序遍历：</h4><p> 他的访问顺序是：根节点→左子树→右子树 ；</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">preOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    System.out.println(tree.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">    preOrder(root.left);</span><br><span class="line">    preOrder(root.right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>:carousel_horse:</p>
-<h4 id="b-中序遍历"><a href="#b-中序遍历" class="headerlink" title="b.中序遍历"></a>b.中序遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">inOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    inOrder(root.left);</span><br><span class="line">    System.out.println(root.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">    inOrder(root.right);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>:dog:</p>
-<h4 id="c-后序遍历"><a href="#c-后序遍历" class="headerlink" title="c.后序遍历"></a>c.后序遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">lasrOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    lastOrder(tree.left);</span><br><span class="line">    lastOrder(tree.right);</span><br><span class="line">    System.out.println(root.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>:cat2:</p>
-<h3 id="2-递归求深度"><a href="#2-递归求深度" class="headerlink" title="2.递归求深度"></a>2.递归求深度</h3><p>+++</p>
- <img src="https://pic.leetcode-cn.com/f26ceb47110a4d431260a6af03c127027d9e1bdfd3980c553376734ca29fe545-image.png" alt="image.png" style="zoom: 67%;" /> 
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> root==<span class="literal">null</span>? <span class="number">0</span> : Math.max(maxDepth(root.left), maxDepth(root.right))+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-BFS"><a href="#3-BFS" class="headerlink" title="3.BFS"></a>3.BFS</h3><p>+++</p>
-<p> BFS的实现原理就是一层层遍历，统计一下总共有多少层，我们来画个图分析一下。 </p>
- <img src="https://pic.leetcode-cn.com/4d908dab4fe456418f3c06a124c4a0391c67f19780bfafc24d33878541faa665-image.png" alt="image.png" style="zoom:67%;" /> 
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        Deque&lt;TreeNode&gt; deque = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        deque.push(root);</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (!deque.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">//每一层的个数</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> deque.size();</span><br><span class="line">            <span class="keyword">while</span> (size-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="type">TreeNode</span> <span class="variable">cur</span> <span class="operator">=</span> deque.pop();</span><br><span class="line">                <span class="keyword">if</span> (cur.left != <span class="literal">null</span>)</span><br><span class="line">                    deque.addLast(cur.left);</span><br><span class="line">                <span class="keyword">if</span> (cur.right != <span class="literal">null</span>)</span><br><span class="line">                    deque.addLast(cur.right);</span><br><span class="line">            &#125;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hadoop 生产调优手册</title>
-    <url>/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/</url>
-    <content><![CDATA[<h2 id="HDFS—核心参数"><a href="#HDFS—核心参数" class="headerlink" title="HDFS—核心参数"></a>HDFS—核心参数</h2><h3 id="NameNode-内存生产配置"><a href="#NameNode-内存生产配置" class="headerlink" title="NameNode 内存生产配置"></a>NameNode 内存生产配置</h3><p><strong>1）NameNode 内存计算</strong><br>    每个文件块大概占用 150byte，一台服务器 128G 内存为例，能存储多少文件块呢？<br>128 * 1024 * 1024 * 1024 &#x2F; 150Byte ≈ 9.1 亿</p>
-<p><strong>2）Hadoop2.x 系列，配置 NameNode 内存</strong><br>    NameNode 内存默认 2000m，如果服务器内存 4G，NameNode 内存可以配置 3g。在<br>hadoop-env.sh 文件中配置如下。</p>
-<p><code>HADOOP_NAMENODE_OPTS=-Xmx3072m</code> </p>
-<p><strong>3）Hadoop3.x 系列，配置 NameNode 内存</strong> </p>
-<p>（1）hadoop-env.sh 中描述 Hadoop 的内存是动态分配的</p>
-<p>（2）查看 NameNode 占用内存</p>
-<p>[atguigu@hadoop102 ~]  jps<br>3088 NodeManager<br>2611 NameNode<br>3271 JobHistoryServer<br>2744 DataNode<br>3579 Jps<br>[atguigu@hadoop102 ~]​  jmap -heap 2611<br>  Heap Configuration:<br> MaxHeapSize      &#x3D;           1031798784 (984.0MB)</p>
-<p>查看发现 hadoop102 上的 NameNode 和 DataNode 占用内存都是自动分配的，且相等。 </p>
-<p>不是很合理。<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646549131508-1646562909757.png" class="" width="1646549131508"></p>
-<p>具体修改：hadoop-env.sh</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export HDFS_NAMENODE_OPTS=&quot;-Dhadoop.security.logger=INFO,RFAS -</span><br><span class="line">Xmx1024m&quot;</span><br><span class="line">export HDFS_DATANODE_OPTS=&quot;-Dhadoop.security.logger=ERROR,RFAS</span><br><span class="line">-Xmx1024m&quot;</span><br></pre></td></tr></table></figure>
-
-<h3 id="NameNode-心跳并发配置"><a href="#NameNode-心跳并发配置" class="headerlink" title="** NameNode** 心跳并发配置"></a>** NameNode** <strong>心跳并发配置</strong></h3><p>NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发<br>的元数据操作。<br>对于大集群或者有大量客户端的集群来说，通常需要增大该参数。默认值是 10。<br><property><br> <name>dfs.namenode.handler.count</name><br> <value>21</value><br></property></p>
-<p>企业经验：dfs.namenode.handler.count&#x3D;20 × 𝑙𝑜𝑔𝑒 𝐶𝑙𝑢𝑠𝑡𝑒𝑟 𝑆𝑖𝑧𝑒，比如集群规模（DataNode 台 </p>
-<p>数）为 3 台时，此参数设置为 21。可通过简单的 python 代码计算该值，代码如下。 </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 ~]$ sudo yum install -y python</span><br><span class="line">[atguigu@hadoop102 ~]$ python</span><br><span class="line">Python 2.7.5 (default, Apr 11 2018, 07:36:10) </span><br><span class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux2</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more </span><br><span class="line">information.</span><br><span class="line">&gt;&gt;&gt; import math</span><br><span class="line">&gt;&gt;&gt; print int(20*math.log(3))</span><br><span class="line">21</span><br><span class="line">&gt;&gt;&gt; quit()</span><br></pre></td></tr></table></figure>
-
-<h3 id="开启回收站配置"><a href="#开启回收站配置" class="headerlink" title="开启回收站配置"></a><strong>开启回收站配置</strong></h3><p>​    开启回收站功能，可以将删除的文件在不超时的情况下，恢复原数据，起到防止误删除、 </p>
-<p>备份等作用。 </p>
-<p><strong>1）回收站工作机制</strong></p>
-回收站功能参数说明**
-
-<p>（1）默认值 fs.trash.interval &#x3D; 0，0 表示禁用回收站；其他值表示设置文件的存活时间。 </p>
-<p>（2）默认值 fs.trash.checkpoint.interval &#x3D; 0，检查回收站的间隔时间。如果该值为 0，则该 </p>
-<p>值设置和 fs.trash.interval 的参数值相等。 </p>
-<p>（3）要求 fs.trash.checkpoint.interval &lt;&#x3D; fs.trash.interval.</p>
-<p><strong>3）启用回收站</strong></p>
-<p>修改 core-site.xml，配置垃圾回收时间为 1 分钟。 </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;fs.trash.interval&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;1&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
-
-<p><strong>4）</strong>查看回收站 </p>
-<p>​    回收站目录在 HDFS 集群中的路径：&#x2F;user&#x2F;atguigu&#x2F;.Trash&#x2F;…. </p>
-<p><strong>5）</strong>注意：通过网页上直接删除的文件也不会走回收站。 </p>
-<p><strong>6）</strong>通过程序删除的文件不会经过回收站，需要调用 moveToTrash()才进入回收站</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Trash trash = New Trash(conf);</span><br><span class="line">trash.moveToTrash(path);</span><br></pre></td></tr></table></figure>
-
-<p><strong>7）</strong>只有在命令行利用 hadoop fs -rm 命令删除的文件才会走回收站。</p>
-<p><strong>8）</strong>恢复回收站数据，是找到回收路径把他copy或移动出来</p>
-<h2 id="HDFS—集群压测"><a href="#HDFS—集群压测" class="headerlink" title="HDFS—集群压测"></a>HDFS—集群压测</h2><p>在企业中非常关心每天从 Java 后台拉取过来的数据，需要多久能上传到集群？消费者 关心多久能从 HDFS 上拉取需要的数据？ </p>
-<p>为了搞清楚 HDFS 的读写性能，生产环境上非常需要对集群进行压测。</p>
-<p>➢ <strong>Number of files：</strong>生成 mapTask 数量，一般是集群中（CPU 核数-1），我们测试虚 拟机就按照实际的物理内存-1 分配即可 </p>
-<p>➢ T<strong>otal MBytes processed****：</strong>单个 map 处理的文件大小 </p>
-<p>➢ **Throughput mb&#x2F;sec:**单个 mapTak 的吞吐量 </p>
-<p>计算方式：处理的总文件大小&#x2F;每一个 mapTask 写数据的时间累加 </p>
-<p>集群整体吞吐量：生成 mapTask 数量*单个 mapTak 的吞吐量 </p>
-<p>➢ <strong>Average IO rate mb&#x2F;sec:</strong> 平均 mapTak 的吞吐量 </p>
-<p>计算方式：每个 mapTask 处理文件大小&#x2F;每一个 mapTask 写数据的时间全部相加除以 task 数量 </p>
-<p>➢ <strong>IO rate std deviation:</strong> 方差、反映各个 mapTask 处理的差值，越小越均衡</p>
-<p><strong>1）测试内容：向 HDFS 集群写 10 个 128M 的文件</strong></p>
-<p><img src="C:\Users\26959\AppData\Roaming\Typora\typora-user-images\1646549566406.png" alt="1646549566406"></p>
-<p><strong>2）注意：如果测试过程中，出现异常</strong> </p>
-<p>(1）可以在 yarn-site.xml 中设置虚拟内存检测为 false</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则</span><br><span class="line">直接将其杀掉，默认是 true --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
-
-<p>(2）分发配置并重启 Yarn 集群</p>
-<p><strong>3）测试结果分析</strong></p>
-<p>（1）由于副本 1 就在本地，所以该副本不参与测试 </p>
-<p>一共参与测试的文件：10 个文件 * 2 个副本 &#x3D; 20 个 </p>
-<p>压测后的速度：1.61 </p>
-<p>实测速度：1.61M&#x2F;s * 20 个文件 ≈ 32M&#x2F;s </p>
-<p>三台服务器的带宽：12.5 + 12.5 + 12.5 ≈ 30m&#x2F;s </p>
-<p>所有网络资源都已经用满。 </p>
-<p><strong>如果实测速度远远小于网络，并且实测速度不能满足工作需求，可以考虑采用固态硬盘</strong> </p>
-<p><strong>或者增加磁盘个数。</strong> </p>
-<p>（2）如果客户端不在集群节点，那就三个副本都参与计算</p>
-<h2 id="HDFS—多目录"><a href="#HDFS—多目录" class="headerlink" title="HDFS—多目录"></a>HDFS—多目录</h2><p>1）NameNode 的本地目录可以配置成多个，且每个目录存放内容相同，增加了可靠性</p>
-<p>2）具体配置如下</p>
-<p>​        1.在 hdfs-site.xml 文件中添加如下内容</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</span><br><span class="line"> </span><br><span class="line">&lt;value&gt;file://$&#123;hadoop.tmp.dir&#125;/dfs/name1,file://$&#123;hadoop.tmp.</span><br><span class="line">dir&#125;/dfs/name2&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
-
-<p>​        2.停止集群，删除三台节点的 data 和 logs 中所有数据.</p>
-<p>​        3.格式化集群并启动。 </p>
-<p>3)DataNode的多目录配置一样，只不过不需要删除数据和格式化</p>
-<h3 id="集群数据均衡之磁盘间数据均衡"><a href="#集群数据均衡之磁盘间数据均衡" class="headerlink" title="集群数据均衡之磁盘间数据均衡"></a><strong>集群数据均衡之磁盘间数据均衡</strong></h3><p>生产环境，由于硬盘空间不足，往往需要增加一块硬盘。刚加载的硬盘没有数据时，可<br>以执行磁盘数据均衡命令。（Hadoop3.x 新特性）</p>
-<p>（1）生成均衡计划（<strong>我们只有一块磁盘，不会生成计划</strong>） </p>
-<p><code>hdfs diskbalancer -plan hadoop103</code> </p>
-<p>（2）执行均衡计划 </p>
-<p><code>hdfs diskbalancer -execute hadoop103.plan.json</code> </p>
-<p>（3）查看当前均衡任务的执行情况 </p>
-<p><code>hdfs diskbalancer -query hadoop103</code> </p>
-<p>（4）取消均衡任务 </p>
-<p><code>hdfs diskbalancer -cancel hadoop103.plan.json</code> </p>
-<h2 id="HDFS—集群扩容及缩容"><a href="#HDFS—集群扩容及缩容" class="headerlink" title="HDFS—集群扩容及缩容"></a>HDFS—集群扩容及缩容</h2><h3 id="添加白名单"><a href="#添加白名单" class="headerlink" title="添加白名单"></a><strong>添加白名单</strong></h3><p>白名单：表示在白名单的主机 IP 地址可以，用来存储数据。 </p>
-<p>企业中：配置白名单，可以尽量防止黑客恶意访问攻击。 </p>
-<p>配置白名单步骤如下： </p>
-<p>1）在 NameNode 节点的&#x2F;opt&#x2F;module&#x2F;hadoop-3.1.3&#x2F;etc&#x2F;hadoop 目录下分别创建 whitelist 和 </p>
-<p>blacklist 文件 </p>
-<p>（1）创建白名单 </p>
-<p><code>[atguigu@hadoop102 hadoop]$ vim whitelist</code> </p>
-<p>在 whitelist 中添加如下主机名称，假如集群正常工作的节点为 102 103 </p>
-<p>（2）创建黑名单 </p>
-<p><code>[atguigu@hadoop102 hadoop]$ touch blacklist</code> </p>
-<p>保持空的就可以</p>
-<p>2）在 hdfs-site.xml 配置文件中增加 dfs.hosts 配置参数</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!-- 白名单 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.hosts&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;/opt/module/hadoop-3.1.3/etc/hadoop/whitelist&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- 黑名单 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.hosts.exclude&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;/opt/module/hadoop-3.1.3/etc/hadoop/blacklist&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
-
-<p>3）分发配置文件 whitelist，hdfs-site.xml </p>
-<p><code>[atguigu@hadoop104 hadoop]$ xsync hdfs-site.xml whitelist</code> </p>
-<p>4）第一次添加白名单必须重启集群，不是第一次，只需要刷新 NameNode 节点即可 </p>
-<p><code>[atguigu@hadoop102 hadoop-3.1.3]$ myhadoop.sh stop</code> </p>
-<p><code>[atguigu@hadoop102 hadoop-3.1.3]$ myhadoop.sh start</code> </p>
-<h3 id="服役新服务器"><a href="#服役新服务器" class="headerlink" title="服役新服务器"></a><strong>服役新服务器</strong></h3><p>1）需求 </p>
-<p>​    随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据 </p>
-<p>的需求，需要在原有集群基础上动态添加新的数据节点.</p>
-<p>2）环境准备 </p>
-<p>（1）在 hadoop100 主机上再克隆一台 hadoop105 主机 </p>
-<p>（2）修改 IP 地址和主机名称</p>
-<p>（3）拷贝 hadoop102 的&#x2F;opt&#x2F;module 目录和&#x2F;etc&#x2F;profile.d&#x2F;my_env.sh 到 hadoop105</p>
-<p>（4）删除 hadoop105 上 Hadoop 的历史数据，data 和 log 数据 </p>
-<p>（5）配置 hadoop102 和 hadoop103 到 hadoop105 的 ssh 无密登录 </p>
-<p>3）服役新节点具体步骤 </p>
-<p>（1）直接启动 DataNode，即可关联到集群</p>
-<p>4）在白名单中增加新服役的服务器</p>
-<h3 id="服务器间数据均衡"><a href="#服务器间数据均衡" class="headerlink" title="服务器间数据均衡"></a><strong>服务器间数据均衡</strong></h3><p>1）企业经验： </p>
-<p>在企业开发中，如果经常在 hadoop102 和 hadoop104 上提交任务，且副本数为 2，由于数据本地性原则，就会导致 hadoop102 和 hadoop104 数据过多，hadoop103 存储的数据量小。另一种情况，就是新服役的服务器数据量比较少，需要执行集群均衡命令。 </p>
-<p>2）开启数据均衡命令： </p>
-<p><code>[atguigu@hadoop105 hadoop-3.1.3]$ sbin/start-balancer.sh - threshold 10</code> </p>
-<p>对于参数 10，代表的是集群中各个节点的磁盘空间利用率相差不超过 10%，可根据实 </p>
-<p>际情况进行调整。</p>
-<p>3）停止数据均衡命令： </p>
-<p><code>[atguigu@hadoop105 hadoop-3.1.3]$ sbin/stop-balancer.sh</code> </p>
-<p>注意：由于 HDFS 需要启动单独的 Rebalance Server 来执行 Rebalance 操作，所以尽量 </p>
-<p>不要在 NameNode 上执行 start-balancer.sh，而是找一台比较空闲的机器。</p>
-<h3 id="黑名单退役服务器"><a href="#黑名单退役服务器" class="headerlink" title="黑名单退役服务器"></a><strong>黑名单退役服务器</strong></h3><p>黑名单：表示在黑名单的主机 IP 地址不可以，用来存储数据。 </p>
-<p>企业中：配置黑名单，用来退役服务器。 </p>
-<p>黑名单配置步骤如下： </p>
-<p>1）编辑&#x2F;opt&#x2F;module&#x2F;hadoop-3.1.3&#x2F;etc&#x2F;hadoop 目录下的 blacklist 文件</p>
-<p>​    添加如下主机名称（要退役的节点）    </p>
-<p>2）分发配置文件 blacklist，hdfs-site.xml</p>
-<p>3）第一次添加黑名单必须重启集群，不是第一次，只需要刷新 NameNode 节点即可</p>
-<p>4）检查 Web 浏览器，退役节点的状态为 decommission in progress（退役中），说明数据 </p>
-<p>节点正在复制块到其他节点 </p>
-<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553722796.png" class="" width="1646553722796">
-
-<p>5<strong>）等待退役节点状态为</strong> decommissioned<strong>（所有块已经复制完成），停止该节点及节点资源</strong> </p>
-<p>管理器。注意：如果副本数是 3<strong>，服役的节点小于等于</strong> 3<strong>，是不能退役成功的，需要修改</strong> </p>
-<p>副本数后才能退役</p>
-<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553737485.png" class="" width="1646553737485">
-
-<p>6）如果数据不均衡，可以用命令实现集群的再平衡</p>
-<h2 id="HDFS—存储优化"><a href="#HDFS—存储优化" class="headerlink" title="HDFS—存储优化"></a>HDFS—存储优化</h2><h3 id="纠删码原理"><a href="#纠删码原理" class="headerlink" title="纠删码原理"></a><strong>纠删码原理</strong></h3><p>​    HDFS 默认情况下，一个文件有 3 个副本，这样提高了数据的可靠性，但也带来了 2 倍的冗余开销。Hadoop3.x 引入了纠删码，采用计算的方式，可以节省约 50％左右的存储空间</p>
-<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553806181.png" class="" width="1646553806181">
-
-]]></content>
-      <categories>
-        <category>Hadoop</category>
-      </categories>
-      <tags>
-        <tag>Hadoop</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java类</title>
-    <url>/2022/03/06/java%E7%B1%BB/</url>
-    <content><![CDATA[<h3 id="System类"><a href="#System类" class="headerlink" title="System类"></a>System类</h3><p><strong>范例</strong>:在开发中统计耗时</p>
-<p><code>public static long currentTimeMillis();</code></p>
-<h3 id="Clearn类"><a href="#Clearn类" class="headerlink" title="Clearn类"></a>Clearn类</h3><p>1.9版本之后提供的一个对象清理的类，其主要功能是finialize()方法的替代。</p>
-<h3 id="大数字类处理"><a href="#大数字类处理" class="headerlink" title="大数字类处理"></a>大数字类处理</h3><p><strong>进行超过了double范围类型的数字处理</strong>。两个大数字操作类 BigInteger 与 BigDecimal类</p>
-<img src="/2022/03/06/java%E7%B1%BB/1645946509291.png" class="" width="1645946509291">
-
-<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><table>
-<thead>
-<tr>
-<th>public boolean matches(String regex)</th>
-<th>普通</th>
-<th>将指定字符串进行正则判断</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String replaceAll(String regex,String replacement)</td>
-<td>普通</td>
-<td>根据正则表达式替换全部</td>
-</tr>
-<tr>
-<td>public String replaceFirst(String regex,String replacement)</td>
-<td>普通</td>
-<td>根据正则表达式替首个</td>
-</tr>
-<tr>
-<td>public String[] split(String regex)</td>
-<td>普通</td>
-<td>正则拆分</td>
-</tr>
-<tr>
-<td>public String[] split(String regex，int limit)</td>
-<td>普通</td>
-<td>正则拆分</td>
-</tr>
-</tbody></table>
-<h3 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;T&gt;&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 实现对象的比较处理操作</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> o 要比较的对象</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span> 当前数据比传入的对象小返回负数，如果大于返回整数，如果等于返回0</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(T o)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>  排序里面只需要一个compareTo()方法进行排序规则的定义，而后整个Java系统里面就可以为其实现排序处理了。 </p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavaAPIDemmo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException  &#123;</span><br><span class="line">      Person data[] = <span class="keyword">new</span> <span class="title class_">Person</span>[] &#123;</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强A&quot;</span>, <span class="number">80</span>),</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强B&quot;</span>, <span class="number">100</span>),</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强C&quot;</span>, <span class="number">50</span>)&#125;;</span><br><span class="line">          Arrays.sort(data);</span><br><span class="line">          System.out.println(Arrays.toString(data));</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Person&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(String name,<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Person per)</span> &#123;</span><br><span class="line">      <span class="comment">/*  if(this.age &lt; per.age)&#123;</span></span><br><span class="line"><span class="comment">            return -1;</span></span><br><span class="line"><span class="comment">        &#125;else if(this.age &gt; per.age)&#123;</span></span><br><span class="line"><span class="comment">            retrun 1;</span></span><br><span class="line"><span class="comment">        &#125;else&#123;</span></span><br><span class="line"><span class="comment">            return 0;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.age - per.age; <span class="comment">//升序</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;【Person类对象】姓名：&quot;</span>+<span class="built_in">this</span>.name+<span class="string">&quot;、年龄：&quot;</span>+<span class="built_in">this</span>.age+<span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[【Person类对象】姓名：小强C、年龄：50</span></span><br><span class="line"><span class="comment">, 【Person类对象】姓名：小强A、年龄：80</span></span><br><span class="line"><span class="comment">, 【Person类对象】姓名：小强B、年龄：100</span></span><br><span class="line"><span class="comment">]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="File类"><a href="#File类" class="headerlink" title="File类"></a>File类</h3><p><strong>在文件创建前要确保其父路径存在</strong>,父路径不存在可以用.mkdirs()来创建父目录</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (!file.getParentFile().exists()) &#123;<span class="comment">//父路径不存在</span></span><br><span class="line">	file.getParentFile( ).mkdirs() ; /创建父路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>保留两位小数</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MathUtil</span>()&#123;</span><br><span class="line">    pribate <span class="title function_">MathUtil</span><span class="params">()</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="title function_">round</span><span class="params">(<span class="type">double</span> num ,<span class="type">int</span> scale)</span>&#123;<span class="comment">//num是要保留的数字，scale是保留几位小数</span></span><br><span class="line">        retrun Math.round(Math.pow(<span class="number">10</span>,scale) * num) / Math.pow(<span class="number">10</span>,scale);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="字节流和字符流"><a href="#字节流和字符流" class="headerlink" title="字节流和字符流"></a>字节流和字符流</h3><p>对于服务器或者是客户端而言实质上传递的就是一种数据流的处理形式，而所谓的数据流指的就是字节数据。而对于流的处理形式在java.io包里面提供有两类支持：</p>
-<ul>
-<li>字节处理流：OutputStream(输出字节流)、InputStream(输入字节流)；</li>
-<li>字符处理流：Writer(输出字符流)、Reader(输入字符流)。</li>
-</ul>
-<h3 id="1-字节输出流：OutputStream"><a href="#1-字节输出流：OutputStream" class="headerlink" title="1.字节输出流：OutputStream"></a>1.字节输出流：OutputStream</h3><p>字节的数据是以byte类型为主实现的操作，在进行字节内容输出的时候可以使用OutputStream实现，这个类的基本定义：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">OutputStream</span> <span class="keyword">extends</span> <span class="title class_">Object</span> <span class="keyword">implements</span> <span class="title class_">Closeable</span>,FlushableCopy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
-
-<p><strong>OutputStream类定义的是一个公共的输出操作标准，而在这个标准里面一共定义有：</strong></p>
-<table>
-<thead>
-<tr>
-<th>No.</th>
-<th>方法名称</th>
-<th>类型</th>
-<th>特性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>01</td>
-<td>public abstract void write(int b)throws IOException</td>
-<td>普通</td>
-<td>输出单个字节数据</td>
-</tr>
-<tr>
-<td>02</td>
-<td>public void write(byte[] b)throws IOException</td>
-<td>普通</td>
-<td>输出一组字节数据</td>
-</tr>
-<tr>
-<td><strong>03</strong></td>
-<td><strong>public void write(byte[] b,int off,int len)throws IOException</strong></td>
-<td><strong>普通</strong></td>
-<td><strong>输出部分字节数据</strong></td>
-</tr>
-</tbody></table>
-<h3 id="2-字节输入流：InputStream"><a href="#2-字节输入流：InputStream" class="headerlink" title="2.字节输入流：InputStream"></a>2.字节输入流：InputStream</h3><p><a href="https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/io/InputStream.html">InputStream类</a>主要实现的就是字节数据读取，该类定义如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">InputStream</span> <span class="keyword">extends</span> <span class="title class_">Object</span> <span class="keyword">implements</span> <span class="title class_">CloseableCopy</span> to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
-
-<p><strong>在InputStream类里面定义有如下几个核心方法：</strong></p>
-<table>
-<thead>
-<tr>
-<th>No.</th>
-<th>方法名称</th>
-<th>类型</th>
-<th>特性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>01</td>
-<td>public abstract int read() throws IOException</td>
-<td>普通</td>
-<td>读取单个字节数据，如果现在已经读取到底了，返回-1</td>
-</tr>
-<tr>
-<td><strong>02</strong></td>
-<td><strong>public int read(byte[] b) throws IOException</strong></td>
-<td><strong>普通</strong></td>
-<td><strong>读取一组字节数据</strong></td>
-</tr>
-<tr>
-<td>03</td>
-<td>public int read(byte[] b, int off, int len) throws IOException</td>
-<td>普通</td>
-<td>读取一组字节数据(只占数组的部分)·</td>
-</tr>
-</tbody></table>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavaAPIDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:&quot;</span>+File.separator+<span class="string">&quot;hello&quot;</span>+File.separator+<span class="string">&quot;mldn.txt&quot;</span>);</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">        <span class="type">byte</span> data [] = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>]; <span class="comment">//开辟一个缓冲区读取数据</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> input.read(data); <span class="comment">//读取数据，数据全部保存在字节数组之中，返回读取个数</span></span><br><span class="line">        System.out.println(<span class="string">&quot;【&quot;</span>+<span class="keyword">new</span> <span class="title class_">String</span>(data,<span class="number">0</span>,len)+<span class="string">&quot;】&quot;</span>);</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-字符输出流：Writer"><a href="#3-字符输出流：Writer" class="headerlink" title="3.字符输出流：Writer"></a>3.字符输出流：Writer</h3><ul>
-<li>输出字符数组：public void write(char[] cbuf) throws IOException；</li>
-<li>输出字符串：public void write(String str) throws [IOException]；</li>
-</ul>
-<h3 id="4-字符输入流：Reader"><a href="#4-字符输入流：Reader" class="headerlink" title="4.字符输入流：Reader"></a>4.字符输入流：Reader</h3><p>字符流读取的时候只能够按照数组的形式来实现处理操作。</p>
-<ul>
-<li>接受数据：public int read(char[] cbuf) throws IOException;</li>
-</ul>
-<h3 id="5-字符流和字节流的区别"><a href="#5-字符流和字节流的区别" class="headerlink" title="5.字符流和字节流的区别"></a>5.字符流和字节流的区别</h3><p>在使用OutputStream类输出的时候如果现在没有使用close()方法关闭输出流发现内容依然可以正常的输出。但如果在使用Writer输出的时候如果现在没有使用close()方法关闭输出流，那么这个时候内容将无法进行输出，因为Writer使用到了缓冲区。当使用close()方法的时候将会出现强制刷新缓冲区的情况，所以这个时候会将内容进行输出，如果没有关闭，那么将无法进行输出操作，所以此时如果在不关闭的情况下要想将全部的内容输出可以使用flush()方法强制清空。</p>
-<p><strong>字节流在进行处理的时候并不会使用到缓冲区，而字符流会使用到缓冲区。另外那个缓冲区的字符流更加适合于中文数据的处理。</strong></p>
-<p>结论：只要是纯文本数据优先使用字符流，除此之外都使用字节流。</p>
-<h3 id="Java序列化"><a href="#Java序列化" class="headerlink" title="Java序列化"></a>Java序列化</h3><p><strong>用io包中的 Serializable接口就可实现序列化</strong></p>
-<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><table>
-<thead>
-<tr>
-<th>当使用无参方法构造时会有一个loadFactor属性，并且默认为0.75</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>使用put（）方法保存时会调用putVal()方法，而在putVal方法里面也有一个数据的保存，调用resize（）方法进行容量的扩充</td>
-</tr>
-</tbody></table>
-<p><strong>是如何用put()扩充的？</strong></p>
-<p>a.在 HashMap_类里面提供有一个“DEFAULT_ INITIAL_CAPACITY”常量，作为16个元素，也就是说默认可以保存的最大内容是16;</p>
-<p>b.当保存的内容的容量超过了与个阈值“DEFAULT LOAD FACTOR &#x3D; 0.75f”，相当与“容量 * 阈值 &#x3D; 12“ 保存12个元素的时候就会进行容量的扩充;</p>
-<p>c.在采用扩充的时候每次扩充2倍的容量   源代码&lt;&lt;1 向左移一</p>
-<p><strong>请解释工作原理</strong></p>
-<p>a.存储依然是用了Node类完成的    （链表（时间复杂度O(n）、二叉树（时间复杂度O(logn））。</p>
-<p>b.从1.8起要适应大数据时代，所以存储发生了变化，提供了一个常量<code>TREEIFY THRESHOLD = 8</code>，如果阈值没有超过8那就会按照链表的方式进行处理，如果超过8则会链表转换为红黑树</p>
-<p>通过HashMap实例化的Map接口可以针对与key或value<strong>保存null的数据</strong>，同时也可以发现即便保存数据的<strong>key重复</strong>，那么也不会出现错误，而是出现<strong>内容的替换</strong>。</p>
-<p><strong>面试题：在进行HashMap的put()操作的时候，如何实现容量的扩充？</strong></p>
-<ul>
-<li>在HashMap类里面提供有一个“DEFAULT_INITIAL_CAPACITY”常量，作为初始化的容量配置，作为初始化大小为16个元素。</li>
-<li>当我们保存的容量超过了一个阈值(DEFAULT_LOAD_FACTOP&#x3D;0.75f)，相当于容量*阈值&#x3D;12，保存12个元素的时候容量会扩充。</li>
-<li>在进行扩充的时候HashMap采用的是成倍扩充模式。</li>
-</ul>
-<p><strong>HashMap是使用了哪些方法来有效解决哈希冲突？</strong></p>
-<ol>
-<li>使用 链地址法（使用散列表）来链接拥有相同hash值的数据；</li>
-<li>使用 2次扰动函数（hash函数）来降低哈希冲突的概率，使得数据分布更平均；</li>
-<li>引入红黑树进一步降低遍历的时间复杂度，使得遍历更快；</li>
-</ol>
-<p><strong>HashMap在JDK1.7和JDK1.8中有哪些不同</strong></p>
-<table>
-<thead>
-<tr>
-<th>不同</th>
-<th>JDK 1.7</th>
-<th>JDK 1.8</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>存储结构</td>
-<td>数组 + 链表</td>
-<td>数组 + 链表 + 红黑树</td>
-</tr>
-<tr>
-<td>初始化方式</td>
-<td>单独函数：<code>inflateTable()</code></td>
-<td>直接集成到了扩容函数<code>resize()</code>中</td>
-</tr>
-<tr>
-<td>hash值计算方式</td>
-<td>扰动处理 &#x3D; 9次扰动 &#x3D; 4次位运算 + 5次异或运算</td>
-<td>扰动处理 &#x3D; 2次扰动 &#x3D; 1次位运算 + 1次异或运算</td>
-</tr>
-<tr>
-<td>存放数据的规则</td>
-<td>无冲突时，存放数组；冲突时，存放链表</td>
-<td>无冲突时，存放数组；冲突 &amp; 链表长度 &lt;&#x3D; 8：存放单链表；冲突 &amp; 链表长度 &gt; 8：树化并存放红黑树</td>
-</tr>
-<tr>
-<td>插入数据方式</td>
-<td>头插法（先讲原位置的数据移到后1位，再插入数据到该位置）</td>
-<td>尾插法（直接插入到链表尾部&#x2F;红黑树）</td>
-</tr>
-<tr>
-<td>扩容后存储位置的计算方式</td>
-<td>全部按照原来方法进行计算（即hashCode -&gt;&gt; 扰动函数 -&gt;&gt; (h&amp;length-1)）</td>
-<td>按照扩容后的规律计算（即扩容后的位置&#x3D;原位置 or 原位置 + 旧容量）</td>
-</tr>
-</tbody></table>
-<p><strong>为什么JDK1.8要用尾插法？</strong></p>
-<p><strong>使用头插</strong>会改变链表的上的顺序，但是如果<strong>使用尾插</strong>，在扩容时会保持链表元素原本的顺序，就不会出现<strong>链表成环</strong>的问题了。</p>
-<p>面试题：请解释HashMap与Hashtable的区别：</p>
-<ul>
-<li>HashMap中的方法都属于异步操作(非线程安全),HashMap允许保存有null数据；</li>
-<li>Hashtable中的方法都属于同步方法(线程安全)，Hashtable不允许保存null，否则会出现NullPointException。</li>
-</ul>
-<p><strong>使用Iterator实现Map集合的输出步骤：</strong></p>
-<ul>
-<li><p>利用Map接口中提供的entrySet()方法将Map集合转为Set集合；</p>
-</li>
-<li><p>利用Set接口中的iterator()方法将Set集合转为Iterator接口实例；</p>
-</li>
-<li><p>利用Iterator进行迭代输出获取每一组Map.Entry对象，随后通过getKey()与getValue()获取数据</p>
-<img src="/2022/03/06/java%E7%B1%BB/1646315474798.png" class="" width="1646315474798">
-
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Double,String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">     map.put(<span class="number">1d</span>,<span class="string">&quot;aaa&quot;</span>);<span class="comment">//添加</span></span><br><span class="line">     map.put(<span class="number">2d</span>,<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">     map.put(<span class="number">3d</span>,<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (Object f:map.entrySet())&#123;</span><br><span class="line">         System.out.println(f);</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-]]></content>
-      <categories>
-        <category>Java</category>
-      </categories>
-      <tags>
-        <tag>Java类</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hadoop</title>
     <url>/2022/03/06/hadoop/</url>
     <content><![CDATA[<h3 id="Mapper、Reducer，Driver构造步骤"><a href="#Mapper、Reducer，Driver构造步骤" class="headerlink" title="Mapper、Reducer，Driver构造步骤"></a>Mapper、Reducer，Driver构造步骤</h3><h4 id="Mapper："><a href="#Mapper：" class="headerlink" title="Mapper："></a>Mapper：</h4><p>​    1.extend Mapper&lt;k,v,k,v&gt;,注意出入和输出kv的格式（<font color='red'>与java不同注意包</font>）  </p>
@@ -706,6 +273,635 @@
       </tags>
   </entry>
   <entry>
+    <title>Hadoop 生产调优手册</title>
+    <url>/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="HDFS—核心参数"><a href="#HDFS—核心参数" class="headerlink" title="HDFS—核心参数"></a>HDFS—核心参数</h2><h3 id="NameNode-内存生产配置"><a href="#NameNode-内存生产配置" class="headerlink" title="NameNode 内存生产配置"></a>NameNode 内存生产配置</h3><p><strong>1）NameNode 内存计算</strong><br>    每个文件块大概占用 150byte，一台服务器 128G 内存为例，能存储多少文件块呢？<br>128 * 1024 * 1024 * 1024 &#x2F; 150Byte ≈ 9.1 亿</p>
+<p><strong>2）Hadoop2.x 系列，配置 NameNode 内存</strong><br>    NameNode 内存默认 2000m，如果服务器内存 4G，NameNode 内存可以配置 3g。在<br>hadoop-env.sh 文件中配置如下。</p>
+<p><code>HADOOP_NAMENODE_OPTS=-Xmx3072m</code> </p>
+<p><strong>3）Hadoop3.x 系列，配置 NameNode 内存</strong> </p>
+<p>（1）hadoop-env.sh 中描述 Hadoop 的内存是动态分配的</p>
+<p>（2）查看 NameNode 占用内存</p>
+<p>[atguigu@hadoop102 ~]  jps<br>3088 NodeManager<br>2611 NameNode<br>3271 JobHistoryServer<br>2744 DataNode<br>3579 Jps<br>[atguigu@hadoop102 ~]​  jmap -heap 2611<br>  Heap Configuration:<br> MaxHeapSize      &#x3D;           1031798784 (984.0MB)</p>
+<p>查看发现 hadoop102 上的 NameNode 和 DataNode 占用内存都是自动分配的，且相等。 </p>
+<p>不是很合理。<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646549131508-1646562909757.png" class="" width="1646549131508"></p>
+<p>具体修改：hadoop-env.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">export HDFS_NAMENODE_OPTS=&quot;-Dhadoop.security.logger=INFO,RFAS -</span><br><span class="line">Xmx1024m&quot;</span><br><span class="line">export HDFS_DATANODE_OPTS=&quot;-Dhadoop.security.logger=ERROR,RFAS</span><br><span class="line">-Xmx1024m&quot;</span><br></pre></td></tr></table></figure>
+
+<h3 id="NameNode-心跳并发配置"><a href="#NameNode-心跳并发配置" class="headerlink" title="** NameNode** 心跳并发配置"></a>** NameNode** <strong>心跳并发配置</strong></h3><p>NameNode 有一个工作线程池，用来处理不同 DataNode 的并发心跳以及客户端并发<br>的元数据操作。<br>对于大集群或者有大量客户端的集群来说，通常需要增大该参数。默认值是 10。<br><property><br> <name>dfs.namenode.handler.count</name><br> <value>21</value><br></property></p>
+<p>企业经验：dfs.namenode.handler.count&#x3D;20 × 𝑙𝑜𝑔𝑒 𝐶𝑙𝑢𝑠𝑡𝑒𝑟 𝑆𝑖𝑧𝑒，比如集群规模（DataNode 台 </p>
+<p>数）为 3 台时，此参数设置为 21。可通过简单的 python 代码计算该值，代码如下。 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[atguigu@hadoop102 ~]$ sudo yum install -y python</span><br><span class="line">[atguigu@hadoop102 ~]$ python</span><br><span class="line">Python 2.7.5 (default, Apr 11 2018, 07:36:10) </span><br><span class="line">[GCC 4.8.5 20150623 (Red Hat 4.8.5-28)] on linux2</span><br><span class="line">Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more </span><br><span class="line">information.</span><br><span class="line">&gt;&gt;&gt; import math</span><br><span class="line">&gt;&gt;&gt; print int(20*math.log(3))</span><br><span class="line">21</span><br><span class="line">&gt;&gt;&gt; quit()</span><br></pre></td></tr></table></figure>
+
+<h3 id="开启回收站配置"><a href="#开启回收站配置" class="headerlink" title="开启回收站配置"></a><strong>开启回收站配置</strong></h3><p>​    开启回收站功能，可以将删除的文件在不超时的情况下，恢复原数据，起到防止误删除、 </p>
+<p>备份等作用。 </p>
+<p><strong>1）回收站工作机制</strong></p>
+回收站功能参数说明**
+
+<p>（1）默认值 fs.trash.interval &#x3D; 0，0 表示禁用回收站；其他值表示设置文件的存活时间。 </p>
+<p>（2）默认值 fs.trash.checkpoint.interval &#x3D; 0，检查回收站的间隔时间。如果该值为 0，则该 </p>
+<p>值设置和 fs.trash.interval 的参数值相等。 </p>
+<p>（3）要求 fs.trash.checkpoint.interval &lt;&#x3D; fs.trash.interval.</p>
+<p><strong>3）启用回收站</strong></p>
+<p>修改 core-site.xml，配置垃圾回收时间为 1 分钟。 </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;fs.trash.interval&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;1&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4）</strong>查看回收站 </p>
+<p>​    回收站目录在 HDFS 集群中的路径：&#x2F;user&#x2F;atguigu&#x2F;.Trash&#x2F;…. </p>
+<p><strong>5）</strong>注意：通过网页上直接删除的文件也不会走回收站。 </p>
+<p><strong>6）</strong>通过程序删除的文件不会经过回收站，需要调用 moveToTrash()才进入回收站</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Trash trash = New Trash(conf);</span><br><span class="line">trash.moveToTrash(path);</span><br></pre></td></tr></table></figure>
+
+<p><strong>7）</strong>只有在命令行利用 hadoop fs -rm 命令删除的文件才会走回收站。</p>
+<p><strong>8）</strong>恢复回收站数据，是找到回收路径把他copy或移动出来</p>
+<h2 id="HDFS—集群压测"><a href="#HDFS—集群压测" class="headerlink" title="HDFS—集群压测"></a>HDFS—集群压测</h2><p>在企业中非常关心每天从 Java 后台拉取过来的数据，需要多久能上传到集群？消费者 关心多久能从 HDFS 上拉取需要的数据？ </p>
+<p>为了搞清楚 HDFS 的读写性能，生产环境上非常需要对集群进行压测。</p>
+<p>➢ <strong>Number of files：</strong>生成 mapTask 数量，一般是集群中（CPU 核数-1），我们测试虚 拟机就按照实际的物理内存-1 分配即可 </p>
+<p>➢ T<strong>otal MBytes processed****：</strong>单个 map 处理的文件大小 </p>
+<p>➢ **Throughput mb&#x2F;sec:**单个 mapTak 的吞吐量 </p>
+<p>计算方式：处理的总文件大小&#x2F;每一个 mapTask 写数据的时间累加 </p>
+<p>集群整体吞吐量：生成 mapTask 数量*单个 mapTak 的吞吐量 </p>
+<p>➢ <strong>Average IO rate mb&#x2F;sec:</strong> 平均 mapTak 的吞吐量 </p>
+<p>计算方式：每个 mapTask 处理文件大小&#x2F;每一个 mapTask 写数据的时间全部相加除以 task 数量 </p>
+<p>➢ <strong>IO rate std deviation:</strong> 方差、反映各个 mapTask 处理的差值，越小越均衡</p>
+<p><strong>1）测试内容：向 HDFS 集群写 10 个 128M 的文件</strong></p>
+<p><img src="C:\Users\26959\AppData\Roaming\Typora\typora-user-images\1646549566406.png" alt="1646549566406"></p>
+<p><strong>2）注意：如果测试过程中，出现异常</strong> </p>
+<p>(1）可以在 yarn-site.xml 中设置虚拟内存检测为 false</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!--是否启动一个线程检查每个任务正使用的虚拟内存量，如果任务超出分配值，则</span><br><span class="line">直接将其杀掉，默认是 true --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(2）分发配置并重启 Yarn 集群</p>
+<p><strong>3）测试结果分析</strong></p>
+<p>（1）由于副本 1 就在本地，所以该副本不参与测试 </p>
+<p>一共参与测试的文件：10 个文件 * 2 个副本 &#x3D; 20 个 </p>
+<p>压测后的速度：1.61 </p>
+<p>实测速度：1.61M&#x2F;s * 20 个文件 ≈ 32M&#x2F;s </p>
+<p>三台服务器的带宽：12.5 + 12.5 + 12.5 ≈ 30m&#x2F;s </p>
+<p>所有网络资源都已经用满。 </p>
+<p><strong>如果实测速度远远小于网络，并且实测速度不能满足工作需求，可以考虑采用固态硬盘</strong> </p>
+<p><strong>或者增加磁盘个数。</strong> </p>
+<p>（2）如果客户端不在集群节点，那就三个副本都参与计算</p>
+<h2 id="HDFS—多目录"><a href="#HDFS—多目录" class="headerlink" title="HDFS—多目录"></a>HDFS—多目录</h2><p>1）NameNode 的本地目录可以配置成多个，且每个目录存放内容相同，增加了可靠性</p>
+<p>2）具体配置如下</p>
+<p>​        1.在 hdfs-site.xml 文件中添加如下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</span><br><span class="line"> </span><br><span class="line">&lt;value&gt;file://$&#123;hadoop.tmp.dir&#125;/dfs/name1,file://$&#123;hadoop.tmp.</span><br><span class="line">dir&#125;/dfs/name2&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​        2.停止集群，删除三台节点的 data 和 logs 中所有数据.</p>
+<p>​        3.格式化集群并启动。 </p>
+<p>3)DataNode的多目录配置一样，只不过不需要删除数据和格式化</p>
+<h3 id="集群数据均衡之磁盘间数据均衡"><a href="#集群数据均衡之磁盘间数据均衡" class="headerlink" title="集群数据均衡之磁盘间数据均衡"></a><strong>集群数据均衡之磁盘间数据均衡</strong></h3><p>生产环境，由于硬盘空间不足，往往需要增加一块硬盘。刚加载的硬盘没有数据时，可<br>以执行磁盘数据均衡命令。（Hadoop3.x 新特性）</p>
+<p>（1）生成均衡计划（<strong>我们只有一块磁盘，不会生成计划</strong>） </p>
+<p><code>hdfs diskbalancer -plan hadoop103</code> </p>
+<p>（2）执行均衡计划 </p>
+<p><code>hdfs diskbalancer -execute hadoop103.plan.json</code> </p>
+<p>（3）查看当前均衡任务的执行情况 </p>
+<p><code>hdfs diskbalancer -query hadoop103</code> </p>
+<p>（4）取消均衡任务 </p>
+<p><code>hdfs diskbalancer -cancel hadoop103.plan.json</code> </p>
+<h2 id="HDFS—集群扩容及缩容"><a href="#HDFS—集群扩容及缩容" class="headerlink" title="HDFS—集群扩容及缩容"></a>HDFS—集群扩容及缩容</h2><h3 id="添加白名单"><a href="#添加白名单" class="headerlink" title="添加白名单"></a><strong>添加白名单</strong></h3><p>白名单：表示在白名单的主机 IP 地址可以，用来存储数据。 </p>
+<p>企业中：配置白名单，可以尽量防止黑客恶意访问攻击。 </p>
+<p>配置白名单步骤如下： </p>
+<p>1）在 NameNode 节点的&#x2F;opt&#x2F;module&#x2F;hadoop-3.1.3&#x2F;etc&#x2F;hadoop 目录下分别创建 whitelist 和 </p>
+<p>blacklist 文件 </p>
+<p>（1）创建白名单 </p>
+<p><code>[atguigu@hadoop102 hadoop]$ vim whitelist</code> </p>
+<p>在 whitelist 中添加如下主机名称，假如集群正常工作的节点为 102 103 </p>
+<p>（2）创建黑名单 </p>
+<p><code>[atguigu@hadoop102 hadoop]$ touch blacklist</code> </p>
+<p>保持空的就可以</p>
+<p>2）在 hdfs-site.xml 配置文件中增加 dfs.hosts 配置参数</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;!-- 白名单 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.hosts&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;/opt/module/hadoop-3.1.3/etc/hadoop/whitelist&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- 黑名单 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line"> &lt;name&gt;dfs.hosts.exclude&lt;/name&gt;</span><br><span class="line"> &lt;value&gt;/opt/module/hadoop-3.1.3/etc/hadoop/blacklist&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3）分发配置文件 whitelist，hdfs-site.xml </p>
+<p><code>[atguigu@hadoop104 hadoop]$ xsync hdfs-site.xml whitelist</code> </p>
+<p>4）第一次添加白名单必须重启集群，不是第一次，只需要刷新 NameNode 节点即可 </p>
+<p><code>[atguigu@hadoop102 hadoop-3.1.3]$ myhadoop.sh stop</code> </p>
+<p><code>[atguigu@hadoop102 hadoop-3.1.3]$ myhadoop.sh start</code> </p>
+<h3 id="服役新服务器"><a href="#服役新服务器" class="headerlink" title="服役新服务器"></a><strong>服役新服务器</strong></h3><p>1）需求 </p>
+<p>​    随着公司业务的增长，数据量越来越大，原有的数据节点的容量已经不能满足存储数据 </p>
+<p>的需求，需要在原有集群基础上动态添加新的数据节点.</p>
+<p>2）环境准备 </p>
+<p>（1）在 hadoop100 主机上再克隆一台 hadoop105 主机 </p>
+<p>（2）修改 IP 地址和主机名称</p>
+<p>（3）拷贝 hadoop102 的&#x2F;opt&#x2F;module 目录和&#x2F;etc&#x2F;profile.d&#x2F;my_env.sh 到 hadoop105</p>
+<p>（4）删除 hadoop105 上 Hadoop 的历史数据，data 和 log 数据 </p>
+<p>（5）配置 hadoop102 和 hadoop103 到 hadoop105 的 ssh 无密登录 </p>
+<p>3）服役新节点具体步骤 </p>
+<p>（1）直接启动 DataNode，即可关联到集群</p>
+<p>4）在白名单中增加新服役的服务器</p>
+<h3 id="服务器间数据均衡"><a href="#服务器间数据均衡" class="headerlink" title="服务器间数据均衡"></a><strong>服务器间数据均衡</strong></h3><p>1）企业经验： </p>
+<p>在企业开发中，如果经常在 hadoop102 和 hadoop104 上提交任务，且副本数为 2，由于数据本地性原则，就会导致 hadoop102 和 hadoop104 数据过多，hadoop103 存储的数据量小。另一种情况，就是新服役的服务器数据量比较少，需要执行集群均衡命令。 </p>
+<p>2）开启数据均衡命令： </p>
+<p><code>[atguigu@hadoop105 hadoop-3.1.3]$ sbin/start-balancer.sh - threshold 10</code> </p>
+<p>对于参数 10，代表的是集群中各个节点的磁盘空间利用率相差不超过 10%，可根据实 </p>
+<p>际情况进行调整。</p>
+<p>3）停止数据均衡命令： </p>
+<p><code>[atguigu@hadoop105 hadoop-3.1.3]$ sbin/stop-balancer.sh</code> </p>
+<p>注意：由于 HDFS 需要启动单独的 Rebalance Server 来执行 Rebalance 操作，所以尽量 </p>
+<p>不要在 NameNode 上执行 start-balancer.sh，而是找一台比较空闲的机器。</p>
+<h3 id="黑名单退役服务器"><a href="#黑名单退役服务器" class="headerlink" title="黑名单退役服务器"></a><strong>黑名单退役服务器</strong></h3><p>黑名单：表示在黑名单的主机 IP 地址不可以，用来存储数据。 </p>
+<p>企业中：配置黑名单，用来退役服务器。 </p>
+<p>黑名单配置步骤如下： </p>
+<p>1）编辑&#x2F;opt&#x2F;module&#x2F;hadoop-3.1.3&#x2F;etc&#x2F;hadoop 目录下的 blacklist 文件</p>
+<p>​    添加如下主机名称（要退役的节点）    </p>
+<p>2）分发配置文件 blacklist，hdfs-site.xml</p>
+<p>3）第一次添加黑名单必须重启集群，不是第一次，只需要刷新 NameNode 节点即可</p>
+<p>4）检查 Web 浏览器，退役节点的状态为 decommission in progress（退役中），说明数据 </p>
+<p>节点正在复制块到其他节点 </p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553722796.png" class="" width="1646553722796">
+
+<p>5<strong>）等待退役节点状态为</strong> decommissioned<strong>（所有块已经复制完成），停止该节点及节点资源</strong> </p>
+<p>管理器。注意：如果副本数是 3<strong>，服役的节点小于等于</strong> 3<strong>，是不能退役成功的，需要修改</strong> </p>
+<p>副本数后才能退役</p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553737485.png" class="" width="1646553737485">
+
+<p>6）如果数据不均衡，可以用命令实现集群的再平衡</p>
+<h2 id="HDFS—存储优化"><a href="#HDFS—存储优化" class="headerlink" title="HDFS—存储优化"></a>HDFS—存储优化</h2><h3 id="纠删码原理"><a href="#纠删码原理" class="headerlink" title="纠删码原理"></a><strong>纠删码原理</strong></h3><p>​    HDFS 默认情况下，一个文件有 3 个副本，这样提高了数据的可靠性，但也带来了 2 倍的冗余开销。Hadoop3.x 引入了纠删码，采用计算的方式，可以节省约 50％左右的存储空间</p>
+<img src="/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/1646553806181.png" class="" width="1646553806181">
+
+]]></content>
+      <categories>
+        <category>Hadoop</category>
+      </categories>
+      <tags>
+        <tag>Hadoop</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SQL高级</title>
+    <url>/2022/03/11/SQL%E9%AB%98%E7%BA%A7/</url>
+    <content><![CDATA[<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
+<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
+
+<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
+<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
+<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
+<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
+<p><strong>复合索引：</strong>一个索引有多个列。</p>
+<p><strong>基本语法：</strong></p>
+<p>创建：</p>
+<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
+<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
+<p>删除：</p>
+<p><code>DROP INDEX [索引名] ON 表名;</code></p>
+<p>查看：</p>
+<p><code>SHOW INDEX FROM 表名\G</code></p>
+<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
+<ol>
+<li><p>主键自动创建</p>
+</li>
+<li><p>频繁作为查找条件的字段</p>
+</li>
+<li><p>查询中与其他表关联的字段</p>
+</li>
+<li><p>频繁更新的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
+</li>
+<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
+</li>
+<li><p>查询中统计或分组的字段</p>
+</li>
+</ol>
+<p><strong>那些不要建立索引：</strong></p>
+<ol>
+<li>表记录太少</li>
+<li>经常增删改的表</li>
+<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
+</ol>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
+
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
+
+<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
+<blockquote>
+<p>CPU：数据装入或读取</p>
+<p>IO：装入数据远大于内存</p>
+<p>服务器：用  top、free、等命令查看系统性能</p>
+</blockquote>
+<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
+<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
+<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
+
+<p><strong>各字段解释：</strong></p>
+<ul>
+<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
+<blockquote>
+<p>Id相同的情况下，执行顺序为从上到下</p>
+<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
+<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
+</blockquote>
+</li>
+<li><p><strong>select_type:</strong></p>
+<blockquote>
+<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
+<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
+<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
+<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
+<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
+<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
+</blockquote>
+</li>
+<li><p><strong>type：</strong></p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
+
+<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
+<blockquote>
+<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
+<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
+
+<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
+
+<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
+
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
+
+<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
+<p><img src="/SQL%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/SQL%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
+<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
+
+<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
+<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
+
+<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>SQL基础</title>
+    <url>/2022/03/09/SQL%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="MYSQL函数"><a href="#MYSQL函数" class="headerlink" title="MYSQL函数"></a>MYSQL函数</h1><p><code>select 函数名（） from 表 </code></p>
+<h2 id="单行函数："><a href="#单行函数：" class="headerlink" title="单行函数："></a><strong>单行函数：</strong></h2><h3 id="字符函数："><a href="#字符函数：" class="headerlink" title="字符函数："></a>字符函数：</h3><ul>
+<li>length（str）：返回参数值的字节个数</li>
+<li>concat（str1，‘-‘，str2）： 拼接字符串</li>
+<li>upper：转大写</li>
+<li>lower：转小写</li>
+<li>substr（str，num1,num2）（str，num）：截取字符串</li>
+<li>instr（str1，str2）：返回str2在str1里的起始索引，找不到返回0</li>
+<li>trim（str）（c from str）：去前后空格（c）</li>
+<li>lpad（str，num，c）：用指定的字符实现<font color='red'>左</font>填充指定长度</li>
+<li>rpad（str，num，c）：用指定的字符实现<font color='red'>右</font>填充指定长度</li>
+<li>replace（str1，str2，str3）：用str3替换str1里面存在的str2字符串</li>
+</ul>
+<h3 id="数学函数："><a href="#数学函数：" class="headerlink" title="数学函数："></a>数学函数：</h3><ul>
+<li>round（num，x）：四舍五入保留x位小数</li>
+<li>ceil（num）：向上取整，返回&gt;&#x3D;num的最小整数 ，1.0001也是2</li>
+<li>floor（num）:向下取整</li>
+<li>truncate（num，x）：截断，小数后保留x位</li>
+<li>mod（num，x）：取余   相当于  %    num%x</li>
+</ul>
+<h3 id="日期函数："><a href="#日期函数：" class="headerlink" title="日期函数："></a>日期函数：</h3><ul>
+<li><p>now（）：返回当前时间 包括时间</p>
+</li>
+<li><p>curdate（）：返回日期不包含时间</p>
+</li>
+<li><p>curtime（）：返回时间，不包括日期</p>
+</li>
+<li><p>year（now（））：返回年。 月（month、monthname（月名字））） 日   小时  分钟  秒一样</p>
+</li>
+<li><p>str_to_date:将日期格式的字符转换为指定格式 。 <font color='green'>str_to_date(‘9-13-1993’,’%m-%d-%Y’); —-  1993-09-13</font></p>
+<img src="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/1646827945093.png" class="" width="1646827945093">
+
+
+</li>
+<li><p>date_format:将日期转换为字符串     <font color='green'>date_format(now(),’%y年%每月%d日’)；   22年09月09日</font>其他函数：</p>
+</li>
+<li><p>version():查看版本号</p>
+</li>
+<li><p>database（）：查看当前数据库</p>
+</li>
+<li><p>user（）：查看当前用户</p>
+</li>
+</ul>
+<h3 id="流程控制函数："><a href="#流程控制函数：" class="headerlink" title="流程控制函数："></a>流程控制函数：</h3><ul>
+<li><p>if函数：if   else    的效果</p>
+<p><font color='green'>select if （10 &gt; 5  ,’da’,’xiao’);     da</font>\</p>
+</li>
+<li><p>case函数     <font color='green'>select  原始工资，dep_id，case dep_id when 30 then salary * 1.1 when 40 then salary*1.2 else salary end as 新工资 from emp；</font></p>
+</li>
+</ul>
+<h2 id="分组函数："><a href="#分组函数：" class="headerlink" title="分组函数："></a>分组函数：</h2><p>用做统计使用，又称聚合函数或组函数</p>
+<p>有  <font color='green'> sum  avg  count max  min </font>。</p>
+<p>特点：</p>
+<ul>
+<li>sum，avg一般用于处理数值函数</li>
+<li>max ，min，count 可 用于任何函数</li>
+<li>所有分组函数都忽略null值</li>
+<li>可以和distinct（去重）搭配：<ul>
+<li><font color='green'>select sum(distinct salary) ,sum(salary) from emp;    39666    1520</font></li>
+</ul>
+</li>
+<li>count函数的详细介绍<ul>
+<li>count(*) 查询总行数  count（常量） 也是统计总行数，其就是添加了一列都是常量</li>
+<li>MYISAM存储下，count（*）的效率高  INNODB存储下  count(**)与 count(1)一样</li>
+</ul>
+</li>
+<li>和分组函数一同查询的字段有限制，要求是group  by  后的字段</li>
+</ul>
+<h2 id="分页查询（limit）："><a href="#分页查询（limit）：" class="headerlink" title="分页查询（limit）："></a>分页查询（limit）：</h2><p>应用场景：当要显示的数据，一页显示不全，需要分页提交sql请求。</p>
+<p>limit（offset，size）：offset要显示的起始索引<font color='red'>（从0开始）</font>，size要显示的条目个数</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>limit语句要放在查询的最后</li>
+<li>公式：<ul>
+<li>要显示的页数page，每页的条目数size。 select 查询列表  from  表  limit （page-1）*size，size；</li>
+</ul>
+</li>
+</ul>
+<p>查询语句中的关键字和顺序：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *         7</span><br><span class="line">from 表          1</span><br><span class="line">join 表2         2</span><br><span class="line">on 连接条件       3</span><br><span class="line">where  筛选条件   4</span><br><span class="line">group by 字段    5</span><br><span class="line">having  筛选条    6</span><br><span class="line">order by  字     8</span><br><span class="line">limit            9</span><br></pre></td></tr></table></figure>
+
+]]></content>
+  </entry>
+  <entry>
+    <title>链表，二叉树</title>
+    <url>/2022/03/06/hello/</url>
+    <content><![CDATA[<h1 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h1><h2 id="创建链表"><a href="#创建链表" class="headerlink" title="创建链表"></a>创建链表</h2><p><strong>用Node节点来进行数据保存，创建一个专门的类来进行管理，客户端不操作Node。</strong>应该对Node类进行包装处理，定义出操作标准。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">ILink</span>&lt;E&gt;&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>;</span><br><span class="line">    <span class="keyword">public</span> Object [] toArray();</span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(<span class="type">int</span> index,Object data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(E data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(E data)</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LinkImpl</span>&lt;E&gt; <span class="keyword">implements</span> <span class="title class_">ILink</span>&lt;E&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">Node</span>&#123;   <span class="comment">//保存节点的数据关系</span></span><br><span class="line">        <span class="keyword">private</span> E data;   <span class="comment">//保存数据</span></span><br><span class="line">        <span class="keyword">private</span> Node next;    <span class="comment">//保存下一个引用</span></span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">Node</span><span class="params">(E data)</span>&#123;  <span class="comment">//有数据才有意义</span></span><br><span class="line">            <span class="built_in">this</span>.data = data;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">addNode</span><span class="params">(Node newNode)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.next == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="built_in">this</span>.next == newNode;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.next.addNode(newNode)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//第一次调用： this = LinkImpl.root</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">toArrayNode</span><span class="params">()</span>&#123;</span><br><span class="line">            LinkImpl.<span class="built_in">this</span>.returnData[LinkImpl.<span class="built_in">this</span>.foot++] = <span class="built_in">this</span>.data;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.next)&#123;</span><br><span class="line">                <span class="built_in">this</span>.next.toArrayNode();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> E <span class="title function_">getNode</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(LinkImpl.<span class="built_in">this</span>.foot++ == index)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.data;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.next.getNode(index);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setNode</span><span class="params">(<span class="type">int</span> index,Object data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(LinkImpl.<span class="built_in">this</span>.foot++ == index)&#123;</span><br><span class="line">                <span class="built_in">this</span>.data = data;  <span class="comment">//修改数据</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">this</span>.next.setNode(index,data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">containsNode</span><span class="params">(Object data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.data.equals(data))&#123;    <span class="comment">//对象比较</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.next==<span class="literal">null</span>)&#123;   <span class="comment">//没有后续节点</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                    retrun  <span class="built_in">this</span>.next.containsNode(data);  <span class="comment">//向后继续寻找</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">removeNode</span><span class="params">(Node pre , E data)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.data.equals(data))&#123;</span><br><span class="line">                pre.next = <span class="built_in">this</span>.next;  <span class="comment">//空出当前节点</span></span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(<span class="built_in">this</span>.next!=<span class="literal">null</span>)&#123;  <span class="comment">//有后续节点</span></span><br><span class="line">                    <span class="built_in">this</span>.next.removeNode(<span class="built_in">this</span>,data);  <span class="comment">//向后继续删除</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//  -----以下为Link类中定义的成员-----</span></span><br><span class="line">    <span class="keyword">private</span> Node root;  <span class="comment">//保存根元素</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> count;  <span class="comment">//统计个数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> foot;  <span class="comment">//定义下标</span></span><br><span class="line">    <span class="keyword">private</span> Object [] returnData;  <span class="comment">//定义返回数组</span></span><br><span class="line">    <span class="comment">//  -----以下为Link类中定义的方法-----</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">add</span><span class="params">(E e)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(e==<span class="literal">null</span>)&#123;   <span class="comment">//如果保存数据为空至极返回</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        Node newNode <span class="keyword">new</span> <span class="title class_">Node</span>(e);  <span class="comment">//创建一个新的节点</span></span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.root == <span class="literal">null</span>)&#123;       </span><br><span class="line">            <span class="built_in">this</span>.root = newNode;   <span class="comment">//如果节点为空则将新的节点作为根节点</span></span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.root.addNode(newNode);    <span class="comment">//否则存入下一节点</span></span><br><span class="line">        &#125;</span><br><span class="line">        count++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">size</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.count;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEmpty</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> count==<span class="number">0</span>;     <span class="comment">// 1.判断数据是否为0</span></span><br><span class="line">       	<span class="comment">//return root==null;  //2.判断根节点是否为空</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> Object [] toArray()&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.root==<span class="literal">null</span>)&#123;    <span class="comment">//如果为空直接返回</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>;  <span class="comment">//脚标清零</span></span><br><span class="line">        <span class="built_in">this</span>.returnData = <span class="keyword">new</span> <span class="title class_">Object</span>[<span class="built_in">this</span>.count];  <span class="comment">//根据已有长度开辟数组</span></span><br><span class="line">        <span class="built_in">this</span>.root.toArrayNode();  <span class="comment">//进行递归保存数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.returnData;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> E <span class="title function_">get</span><span class="params">(<span class="type">int</span> index)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(index &gt;= <span class="built_in">this</span>.count)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>; <span class="comment">//索引清零</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.getNode(index);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">set</span><span class="params">(<span class="type">int</span> index,Object data)</span>&#123;</span><br><span class="line">         <span class="keyword">if</span>(index &gt;= <span class="built_in">this</span>.count)&#123;</span><br><span class="line">            <span class="keyword">return</span>;  <span class="comment">//退出</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">this</span>.foot = <span class="number">0</span>; <span class="comment">//索引清零</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.setNode(index,data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">contains</span><span class="params">(Object data)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">null</span>) </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;  <span class="comment">//没有数据</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.root.containsNode(data)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(E data)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">this</span>.contains(data))&#123;  <span class="comment">//判断数据是否存在</span></span><br><span class="line">            <span class="keyword">if</span>(<span class="built_in">this</span>.root.data.equals(data))&#123;  <span class="comment">//判断是否为根节点</span></span><br><span class="line">                <span class="built_in">this</span>.root = <span class="built_in">this</span>.root.next;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.root.next.removeNode(<span class="built_in">this</span>.root,data);  <span class="comment">//交个Node类来处理</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">this</span>.count--;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">clean</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.root = <span class="literal">null</span>;</span><br><span class="line">        <span class="built_in">this</span>.count = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h1 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h1><h2 id="反转链表"><a href="#反转链表" class="headerlink" title="反转链表"></a>反转链表</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> ListNode <span class="title function_">reverse</span><span class="params">(ListNode head)</span> &#123;   <span class="comment">//head  : 1-&gt;2-&gt;3</span></span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">prev</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">while</span> (head != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">ListNode</span> <span class="variable">next</span> <span class="operator">=</span> head.next;  <span class="comment">//指向下一个节点  2-&gt;3  // 3</span></span><br><span class="line">        head.next = prev;  <span class="comment">//head.next = null;    //head.next = 1</span></span><br><span class="line">        prev = head;    <span class="comment">// prev = 1 -&gt;null        //prev = 2-&gt;1-&gt;null</span></span><br><span class="line">        head = next;   <span class="comment">//  head = 2-&gt;3            //head = 3</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> prev;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>主要思想为创建一个新的链表，让head节点的内容一直指向新链表的头部</li>
+</ul>
+<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="二叉树的深度"><a href="#二叉树的深度" class="headerlink" title="二叉树的深度"></a>二叉树的深度</h2><h3 id="1-遍历"><a href="#1-遍历" class="headerlink" title="1.遍历"></a>1.遍历</h3><p>+++</p>
+<h4 id="a-先序遍历："><a href="#a-先序遍历：" class="headerlink" title="a.先序遍历："></a>a.先序遍历：</h4><p> 他的访问顺序是：根节点→左子树→右子树 ；</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">preOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    System.out.println(tree.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">    preOrder(root.left);</span><br><span class="line">    preOrder(root.right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>:carousel_horse:</p>
+<h4 id="b-中序遍历"><a href="#b-中序遍历" class="headerlink" title="b.中序遍历"></a>b.中序遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">inOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    inOrder(root.left);</span><br><span class="line">    System.out.println(root.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">    inOrder(root.right);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>:dog:</p>
+<h4 id="c-后序遍历"><a href="#c-后序遍历" class="headerlink" title="c.后序遍历"></a>c.后序遍历</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">lasrOrder</span><span class="params">(TreeNode tree)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(tree==<span class="literal">null</span>)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    lastOrder(tree.left);</span><br><span class="line">    lastOrder(tree.right);</span><br><span class="line">    System.out.println(root.val+<span class="string">&quot; &quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>:cat2:</p>
+<h3 id="2-递归求深度"><a href="#2-递归求深度" class="headerlink" title="2.递归求深度"></a>2.递归求深度</h3><p>+++</p>
+ <img src="https://pic.leetcode-cn.com/f26ceb47110a4d431260a6af03c127027d9e1bdfd3980c553376734ca29fe545-image.png" alt="image.png" style="zoom: 67%;" /> 
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> root==<span class="literal">null</span>? <span class="number">0</span> : Math.max(maxDepth(root.left), maxDepth(root.right))+<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-BFS"><a href="#3-BFS" class="headerlink" title="3.BFS"></a>3.BFS</h3><p>+++</p>
+<p> BFS的实现原理就是一层层遍历，统计一下总共有多少层，我们来画个图分析一下。 </p>
+ <img src="https://pic.leetcode-cn.com/4d908dab4fe456418f3c06a124c4a0391c67f19780bfafc24d33878541faa665-image.png" alt="image.png" style="zoom:67%;" /> 
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">maxDepth</span><span class="params">(TreeNode root)</span> &#123;</span><br><span class="line">        Deque&lt;TreeNode&gt; deque = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        deque.push(root);</span><br><span class="line">        <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (!deque.isEmpty()) &#123;</span><br><span class="line">            <span class="comment">//每一层的个数</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">size</span> <span class="operator">=</span> deque.size();</span><br><span class="line">            <span class="keyword">while</span> (size-- &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="type">TreeNode</span> <span class="variable">cur</span> <span class="operator">=</span> deque.pop();</span><br><span class="line">                <span class="keyword">if</span> (cur.left != <span class="literal">null</span>)</span><br><span class="line">                    deque.addLast(cur.left);</span><br><span class="line">                <span class="keyword">if</span> (cur.right != <span class="literal">null</span>)</span><br><span class="line">                    deque.addLast(cur.right);</span><br><span class="line">            &#125;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java类</title>
+    <url>/2022/03/06/java%E7%B1%BB/</url>
+    <content><![CDATA[<h3 id="System类"><a href="#System类" class="headerlink" title="System类"></a>System类</h3><p><strong>范例</strong>:在开发中统计耗时</p>
+<p><code>public static long currentTimeMillis();</code></p>
+<h3 id="Clearn类"><a href="#Clearn类" class="headerlink" title="Clearn类"></a>Clearn类</h3><p>1.9版本之后提供的一个对象清理的类，其主要功能是finialize()方法的替代。</p>
+<h3 id="大数字类处理"><a href="#大数字类处理" class="headerlink" title="大数字类处理"></a>大数字类处理</h3><p><strong>进行超过了double范围类型的数字处理</strong>。两个大数字操作类 BigInteger 与 BigDecimal类</p>
+<img src="/2022/03/06/java%E7%B1%BB/1645946509291.png" class="" width="1645946509291">
+
+<h3 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h3><table>
+<thead>
+<tr>
+<th>public boolean matches(String regex)</th>
+<th>普通</th>
+<th>将指定字符串进行正则判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String replaceAll(String regex,String replacement)</td>
+<td>普通</td>
+<td>根据正则表达式替换全部</td>
+</tr>
+<tr>
+<td>public String replaceFirst(String regex,String replacement)</td>
+<td>普通</td>
+<td>根据正则表达式替首个</td>
+</tr>
+<tr>
+<td>public String[] split(String regex)</td>
+<td>普通</td>
+<td>正则拆分</td>
+</tr>
+<tr>
+<td>public String[] split(String regex，int limit)</td>
+<td>普通</td>
+<td>正则拆分</td>
+</tr>
+</tbody></table>
+<h3 id="Comparable"><a href="#Comparable" class="headerlink" title="Comparable"></a>Comparable</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Comparable</span>&lt;T&gt;&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 实现对象的比较处理操作</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@param</span> o 要比较的对象</span></span><br><span class="line"><span class="comment">         * <span class="doctag">@return</span> 当前数据比传入的对象小返回负数，如果大于返回整数，如果等于返回0</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(T o)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>  排序里面只需要一个compareTo()方法进行排序规则的定义，而后整个Java系统里面就可以为其实现排序处理了。 </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavaAPIDemmo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ParseException  &#123;</span><br><span class="line">      Person data[] = <span class="keyword">new</span> <span class="title class_">Person</span>[] &#123;</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强A&quot;</span>, <span class="number">80</span>),</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强B&quot;</span>, <span class="number">100</span>),</span><br><span class="line">          <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&quot;小强C&quot;</span>, <span class="number">50</span>)&#125;;</span><br><span class="line">          Arrays.sort(data);</span><br><span class="line">          System.out.println(Arrays.toString(data));</span><br><span class="line">      &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> <span class="keyword">implements</span> <span class="title class_">Comparable</span>&lt;Person&gt;&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">Person</span><span class="params">(String name,<span class="type">int</span> age)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">        <span class="built_in">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">compareTo</span><span class="params">(Person per)</span> &#123;</span><br><span class="line">      <span class="comment">/*  if(this.age &lt; per.age)&#123;</span></span><br><span class="line"><span class="comment">            return -1;</span></span><br><span class="line"><span class="comment">        &#125;else if(this.age &gt; per.age)&#123;</span></span><br><span class="line"><span class="comment">            retrun 1;</span></span><br><span class="line"><span class="comment">        &#125;else&#123;</span></span><br><span class="line"><span class="comment">            return 0;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">      */</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.age - per.age; <span class="comment">//升序</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;【Person类对象】姓名：&quot;</span>+<span class="built_in">this</span>.name+<span class="string">&quot;、年龄：&quot;</span>+<span class="built_in">this</span>.age+<span class="string">&quot;\n&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">[【Person类对象】姓名：小强C、年龄：50</span></span><br><span class="line"><span class="comment">, 【Person类对象】姓名：小强A、年龄：80</span></span><br><span class="line"><span class="comment">, 【Person类对象】姓名：小强B、年龄：100</span></span><br><span class="line"><span class="comment">]</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="File类"><a href="#File类" class="headerlink" title="File类"></a>File类</h3><p><strong>在文件创建前要确保其父路径存在</strong>,父路径不存在可以用.mkdirs()来创建父目录</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (!file.getParentFile().exists()) &#123;<span class="comment">//父路径不存在</span></span><br><span class="line">	file.getParentFile( ).mkdirs() ; /创建父路径</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>保留两位小数</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MathUtil</span>()&#123;</span><br><span class="line">    pribate <span class="title function_">MathUtil</span><span class="params">()</span>&#123;&#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">double</span> <span class="title function_">round</span><span class="params">(<span class="type">double</span> num ,<span class="type">int</span> scale)</span>&#123;<span class="comment">//num是要保留的数字，scale是保留几位小数</span></span><br><span class="line">        retrun Math.round(Math.pow(<span class="number">10</span>,scale) * num) / Math.pow(<span class="number">10</span>,scale);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="字节流和字符流"><a href="#字节流和字符流" class="headerlink" title="字节流和字符流"></a>字节流和字符流</h3><p>对于服务器或者是客户端而言实质上传递的就是一种数据流的处理形式，而所谓的数据流指的就是字节数据。而对于流的处理形式在java.io包里面提供有两类支持：</p>
+<ul>
+<li>字节处理流：OutputStream(输出字节流)、InputStream(输入字节流)；</li>
+<li>字符处理流：Writer(输出字符流)、Reader(输入字符流)。</li>
+</ul>
+<h3 id="1-字节输出流：OutputStream"><a href="#1-字节输出流：OutputStream" class="headerlink" title="1.字节输出流：OutputStream"></a>1.字节输出流：OutputStream</h3><p>字节的数据是以byte类型为主实现的操作，在进行字节内容输出的时候可以使用OutputStream实现，这个类的基本定义：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">OutputStream</span> <span class="keyword">extends</span> <span class="title class_">Object</span> <span class="keyword">implements</span> <span class="title class_">Closeable</span>,FlushableCopy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
+
+<p><strong>OutputStream类定义的是一个公共的输出操作标准，而在这个标准里面一共定义有：</strong></p>
+<table>
+<thead>
+<tr>
+<th>No.</th>
+<th>方法名称</th>
+<th>类型</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>public abstract void write(int b)throws IOException</td>
+<td>普通</td>
+<td>输出单个字节数据</td>
+</tr>
+<tr>
+<td>02</td>
+<td>public void write(byte[] b)throws IOException</td>
+<td>普通</td>
+<td>输出一组字节数据</td>
+</tr>
+<tr>
+<td><strong>03</strong></td>
+<td><strong>public void write(byte[] b,int off,int len)throws IOException</strong></td>
+<td><strong>普通</strong></td>
+<td><strong>输出部分字节数据</strong></td>
+</tr>
+</tbody></table>
+<h3 id="2-字节输入流：InputStream"><a href="#2-字节输入流：InputStream" class="headerlink" title="2.字节输入流：InputStream"></a>2.字节输入流：InputStream</h3><p><a href="https://docs.oracle.com/en/java/javase/14/docs/api/java.base/java/io/InputStream.html">InputStream类</a>主要实现的就是字节数据读取，该类定义如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">InputStream</span> <span class="keyword">extends</span> <span class="title class_">Object</span> <span class="keyword">implements</span> <span class="title class_">CloseableCopy</span> to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
+
+<p><strong>在InputStream类里面定义有如下几个核心方法：</strong></p>
+<table>
+<thead>
+<tr>
+<th>No.</th>
+<th>方法名称</th>
+<th>类型</th>
+<th>特性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>01</td>
+<td>public abstract int read() throws IOException</td>
+<td>普通</td>
+<td>读取单个字节数据，如果现在已经读取到底了，返回-1</td>
+</tr>
+<tr>
+<td><strong>02</strong></td>
+<td><strong>public int read(byte[] b) throws IOException</strong></td>
+<td><strong>普通</strong></td>
+<td><strong>读取一组字节数据</strong></td>
+</tr>
+<tr>
+<td>03</td>
+<td>public int read(byte[] b, int off, int len) throws IOException</td>
+<td>普通</td>
+<td>读取一组字节数据(只占数组的部分)·</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JavaAPIDemo</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;E:&quot;</span>+File.separator+<span class="string">&quot;hello&quot;</span>+File.separator+<span class="string">&quot;mldn.txt&quot;</span>);</span><br><span class="line">        <span class="type">InputStream</span> <span class="variable">input</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FileInputStream</span>(file);</span><br><span class="line">        <span class="type">byte</span> data [] = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">1024</span>]; <span class="comment">//开辟一个缓冲区读取数据</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">len</span> <span class="operator">=</span> input.read(data); <span class="comment">//读取数据，数据全部保存在字节数组之中，返回读取个数</span></span><br><span class="line">        System.out.println(<span class="string">&quot;【&quot;</span>+<span class="keyword">new</span> <span class="title class_">String</span>(data,<span class="number">0</span>,len)+<span class="string">&quot;】&quot;</span>);</span><br><span class="line">        input.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;Copy to clipboardErrorCopied</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-字符输出流：Writer"><a href="#3-字符输出流：Writer" class="headerlink" title="3.字符输出流：Writer"></a>3.字符输出流：Writer</h3><ul>
+<li>输出字符数组：public void write(char[] cbuf) throws IOException；</li>
+<li>输出字符串：public void write(String str) throws [IOException]；</li>
+</ul>
+<h3 id="4-字符输入流：Reader"><a href="#4-字符输入流：Reader" class="headerlink" title="4.字符输入流：Reader"></a>4.字符输入流：Reader</h3><p>字符流读取的时候只能够按照数组的形式来实现处理操作。</p>
+<ul>
+<li>接受数据：public int read(char[] cbuf) throws IOException;</li>
+</ul>
+<h3 id="5-字符流和字节流的区别"><a href="#5-字符流和字节流的区别" class="headerlink" title="5.字符流和字节流的区别"></a>5.字符流和字节流的区别</h3><p>在使用OutputStream类输出的时候如果现在没有使用close()方法关闭输出流发现内容依然可以正常的输出。但如果在使用Writer输出的时候如果现在没有使用close()方法关闭输出流，那么这个时候内容将无法进行输出，因为Writer使用到了缓冲区。当使用close()方法的时候将会出现强制刷新缓冲区的情况，所以这个时候会将内容进行输出，如果没有关闭，那么将无法进行输出操作，所以此时如果在不关闭的情况下要想将全部的内容输出可以使用flush()方法强制清空。</p>
+<p><strong>字节流在进行处理的时候并不会使用到缓冲区，而字符流会使用到缓冲区。另外那个缓冲区的字符流更加适合于中文数据的处理。</strong></p>
+<p>结论：只要是纯文本数据优先使用字符流，除此之外都使用字节流。</p>
+<h3 id="Java序列化"><a href="#Java序列化" class="headerlink" title="Java序列化"></a>Java序列化</h3><p><strong>用io包中的 Serializable接口就可实现序列化</strong></p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><table>
+<thead>
+<tr>
+<th>当使用无参方法构造时会有一个loadFactor属性，并且默认为0.75</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>使用put（）方法保存时会调用putVal()方法，而在putVal方法里面也有一个数据的保存，调用resize（）方法进行容量的扩充</td>
+</tr>
+</tbody></table>
+<p><strong>是如何用put()扩充的？</strong></p>
+<p>a.在 HashMap_类里面提供有一个“DEFAULT_ INITIAL_CAPACITY”常量，作为16个元素，也就是说默认可以保存的最大内容是16;</p>
+<p>b.当保存的内容的容量超过了与个阈值“DEFAULT LOAD FACTOR &#x3D; 0.75f”，相当与“容量 * 阈值 &#x3D; 12“ 保存12个元素的时候就会进行容量的扩充;</p>
+<p>c.在采用扩充的时候每次扩充2倍的容量   源代码&lt;&lt;1 向左移一</p>
+<p><strong>请解释工作原理</strong></p>
+<p>a.存储依然是用了Node类完成的    （链表（时间复杂度O(n）、二叉树（时间复杂度O(logn））。</p>
+<p>b.从1.8起要适应大数据时代，所以存储发生了变化，提供了一个常量<code>TREEIFY THRESHOLD = 8</code>，如果阈值没有超过8那就会按照链表的方式进行处理，如果超过8则会链表转换为红黑树</p>
+<p>通过HashMap实例化的Map接口可以针对与key或value<strong>保存null的数据</strong>，同时也可以发现即便保存数据的<strong>key重复</strong>，那么也不会出现错误，而是出现<strong>内容的替换</strong>。</p>
+<p><strong>面试题：在进行HashMap的put()操作的时候，如何实现容量的扩充？</strong></p>
+<ul>
+<li>在HashMap类里面提供有一个“DEFAULT_INITIAL_CAPACITY”常量，作为初始化的容量配置，作为初始化大小为16个元素。</li>
+<li>当我们保存的容量超过了一个阈值(DEFAULT_LOAD_FACTOP&#x3D;0.75f)，相当于容量*阈值&#x3D;12，保存12个元素的时候容量会扩充。</li>
+<li>在进行扩充的时候HashMap采用的是成倍扩充模式。</li>
+</ul>
+<p><strong>HashMap是使用了哪些方法来有效解决哈希冲突？</strong></p>
+<ol>
+<li>使用 链地址法（使用散列表）来链接拥有相同hash值的数据；</li>
+<li>使用 2次扰动函数（hash函数）来降低哈希冲突的概率，使得数据分布更平均；</li>
+<li>引入红黑树进一步降低遍历的时间复杂度，使得遍历更快；</li>
+</ol>
+<p><strong>HashMap在JDK1.7和JDK1.8中有哪些不同</strong></p>
+<table>
+<thead>
+<tr>
+<th>不同</th>
+<th>JDK 1.7</th>
+<th>JDK 1.8</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储结构</td>
+<td>数组 + 链表</td>
+<td>数组 + 链表 + 红黑树</td>
+</tr>
+<tr>
+<td>初始化方式</td>
+<td>单独函数：<code>inflateTable()</code></td>
+<td>直接集成到了扩容函数<code>resize()</code>中</td>
+</tr>
+<tr>
+<td>hash值计算方式</td>
+<td>扰动处理 &#x3D; 9次扰动 &#x3D; 4次位运算 + 5次异或运算</td>
+<td>扰动处理 &#x3D; 2次扰动 &#x3D; 1次位运算 + 1次异或运算</td>
+</tr>
+<tr>
+<td>存放数据的规则</td>
+<td>无冲突时，存放数组；冲突时，存放链表</td>
+<td>无冲突时，存放数组；冲突 &amp; 链表长度 &lt;&#x3D; 8：存放单链表；冲突 &amp; 链表长度 &gt; 8：树化并存放红黑树</td>
+</tr>
+<tr>
+<td>插入数据方式</td>
+<td>头插法（先讲原位置的数据移到后1位，再插入数据到该位置）</td>
+<td>尾插法（直接插入到链表尾部&#x2F;红黑树）</td>
+</tr>
+<tr>
+<td>扩容后存储位置的计算方式</td>
+<td>全部按照原来方法进行计算（即hashCode -&gt;&gt; 扰动函数 -&gt;&gt; (h&amp;length-1)）</td>
+<td>按照扩容后的规律计算（即扩容后的位置&#x3D;原位置 or 原位置 + 旧容量）</td>
+</tr>
+</tbody></table>
+<p><strong>为什么JDK1.8要用尾插法？</strong></p>
+<p><strong>使用头插</strong>会改变链表的上的顺序，但是如果<strong>使用尾插</strong>，在扩容时会保持链表元素原本的顺序，就不会出现<strong>链表成环</strong>的问题了。</p>
+<p>面试题：请解释HashMap与Hashtable的区别：</p>
+<ul>
+<li>HashMap中的方法都属于异步操作(非线程安全),HashMap允许保存有null数据；</li>
+<li>Hashtable中的方法都属于同步方法(线程安全)，Hashtable不允许保存null，否则会出现NullPointException。</li>
+</ul>
+<p><strong>使用Iterator实现Map集合的输出步骤：</strong></p>
+<ul>
+<li><p>利用Map接口中提供的entrySet()方法将Map集合转为Set集合；</p>
+</li>
+<li><p>利用Set接口中的iterator()方法将Set集合转为Iterator接口实例；</p>
+</li>
+<li><p>利用Iterator进行迭代输出获取每一组Map.Entry对象，随后通过getKey()与getValue()获取数据</p>
+<img src="/2022/03/06/java%E7%B1%BB/1646315474798.png" class="" width="1646315474798">
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Map&lt;Double,String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>();</span><br><span class="line">     map.put(<span class="number">1d</span>,<span class="string">&quot;aaa&quot;</span>);<span class="comment">//添加</span></span><br><span class="line">     map.put(<span class="number">2d</span>,<span class="string">&quot;bbb&quot;</span>);</span><br><span class="line">     map.put(<span class="number">3d</span>,<span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">    <span class="keyword">for</span> (Object f:map.entrySet())&#123;</span><br><span class="line">         System.out.println(f);</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java类</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Yarn</title>
     <url>/2022/03/06/yarn/</url>
     <content><![CDATA[<h2 id="Yarn-资源调度器"><a href="#Yarn-资源调度器" class="headerlink" title="Yarn 资源调度器"></a><strong>Yarn</strong> <strong>资源调度器</strong></h2><p>​    Yarn 是一个资源调度平台，负责为运算程序提供服务器运算资源，相当于一个分布式 </p>
@@ -951,311 +1147,5 @@
       <tags>
         <tag>Hadoop</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SQL基础</title>
-    <url>/2022/03/09/SQL%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="MYSQL函数"><a href="#MYSQL函数" class="headerlink" title="MYSQL函数"></a>MYSQL函数</h1><p><code>select 函数名（） from 表 </code></p>
-<h2 id="单行函数："><a href="#单行函数：" class="headerlink" title="单行函数："></a><strong>单行函数：</strong></h2><h3 id="字符函数："><a href="#字符函数：" class="headerlink" title="字符函数："></a>字符函数：</h3><ul>
-<li>length（str）：返回参数值的字节个数</li>
-<li>concat（str1，‘-‘，str2）： 拼接字符串</li>
-<li>upper：转大写</li>
-<li>lower：转小写</li>
-<li>substr（str，num1,num2）（str，num）：截取字符串</li>
-<li>instr（str1，str2）：返回str2在str1里的起始索引，找不到返回0</li>
-<li>trim（str）（c from str）：去前后空格（c）</li>
-<li>lpad（str，num，c）：用指定的字符实现<font color='red'>左</font>填充指定长度</li>
-<li>rpad（str，num，c）：用指定的字符实现<font color='red'>右</font>填充指定长度</li>
-<li>replace（str1，str2，str3）：用str3替换str1里面存在的str2字符串</li>
-</ul>
-<h3 id="数学函数："><a href="#数学函数：" class="headerlink" title="数学函数："></a>数学函数：</h3><ul>
-<li>round（num，x）：四舍五入保留x位小数</li>
-<li>ceil（num）：向上取整，返回&gt;&#x3D;num的最小整数 ，1.0001也是2</li>
-<li>floor（num）:向下取整</li>
-<li>truncate（num，x）：截断，小数后保留x位</li>
-<li>mod（num，x）：取余   相当于  %    num%x</li>
-</ul>
-<h3 id="日期函数："><a href="#日期函数：" class="headerlink" title="日期函数："></a>日期函数：</h3><ul>
-<li><p>now（）：返回当前时间 包括时间</p>
-</li>
-<li><p>curdate（）：返回日期不包含时间</p>
-</li>
-<li><p>curtime（）：返回时间，不包括日期</p>
-</li>
-<li><p>year（now（））：返回年。 月（month、monthname（月名字））） 日   小时  分钟  秒一样</p>
-</li>
-<li><p>str_to_date:将日期格式的字符转换为指定格式 。 <font color='green'>str_to_date(‘9-13-1993’,’%m-%d-%Y’); —-  1993-09-13</font></p>
-<img src="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/1646827945093.png" class="" width="1646827945093">
-
-
-</li>
-<li><p>date_format:将日期转换为字符串     <font color='green'>date_format(now(),’%y年%每月%d日’)；   22年09月09日</font>其他函数：</p>
-</li>
-<li><p>version():查看版本号</p>
-</li>
-<li><p>database（）：查看当前数据库</p>
-</li>
-<li><p>user（）：查看当前用户</p>
-</li>
-</ul>
-<h3 id="流程控制函数："><a href="#流程控制函数：" class="headerlink" title="流程控制函数："></a>流程控制函数：</h3><ul>
-<li><p>if函数：if   else    的效果</p>
-<p><font color='green'>select if （10 &gt; 5  ,’da’,’xiao’);     da</font>\</p>
-</li>
-<li><p>case函数     <font color='green'>select  原始工资，dep_id，case dep_id when 30 then salary * 1.1 when 40 then salary*1.2 else salary end as 新工资 from emp；</font></p>
-</li>
-</ul>
-<h2 id="分组函数："><a href="#分组函数：" class="headerlink" title="分组函数："></a>分组函数：</h2><p>用做统计使用，又称聚合函数或组函数</p>
-<p>有  <font color='green'> sum  avg  count max  min </font>。</p>
-<p>特点：</p>
-<ul>
-<li>sum，avg一般用于处理数值函数</li>
-<li>max ，min，count 可 用于任何函数</li>
-<li>所有分组函数都忽略null值</li>
-<li>可以和distinct（去重）搭配：<ul>
-<li><font color='green'>select sum(distinct salary) ,sum(salary) from emp;    39666    1520</font></li>
-</ul>
-</li>
-<li>count函数的详细介绍<ul>
-<li>count(*) 查询总行数  count（常量） 也是统计总行数，其就是添加了一列都是常量</li>
-<li>MYISAM存储下，count（*）的效率高  INNODB存储下  count(**)与 count(1)一样</li>
-</ul>
-</li>
-<li>和分组函数一同查询的字段有限制，要求是group  by  后的字段</li>
-</ul>
-<h2 id="分页查询（limit）："><a href="#分页查询（limit）：" class="headerlink" title="分页查询（limit）："></a>分页查询（limit）：</h2><p>应用场景：当要显示的数据，一页显示不全，需要分页提交sql请求。</p>
-<p>limit（offset，size）：offset要显示的起始索引<font color='red'>（从0开始）</font>，size要显示的条目个数</p>
-<p><strong>特点：</strong></p>
-<ul>
-<li>limit语句要放在查询的最后</li>
-<li>公式：<ul>
-<li>要显示的页数page，每页的条目数size。 select 查询列表  from  表  limit （page-1）*size，size；</li>
-</ul>
-</li>
-</ul>
-<p>查询语句中的关键字和顺序：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *         7</span><br><span class="line">from 表          1</span><br><span class="line">join 表2         2</span><br><span class="line">on 连接条件       3</span><br><span class="line">where  筛选条件   4</span><br><span class="line">group by 字段    5</span><br><span class="line">having  筛选条    6</span><br><span class="line">order by  字     8</span><br><span class="line">limit            9</span><br></pre></td></tr></table></figure>
-
-]]></content>
-  </entry>
-  <entry>
-    <title></title>
-    <url>/2022/03/11/Sql%E9%AB%98%E7%BA%A7/</url>
-    <content><![CDATA[<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
-<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
-
-<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
-<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
-<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
-<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
-<p><strong>复合索引：</strong>一个索引有多个列。</p>
-<p><strong>基本语法：</strong></p>
-<p>创建：</p>
-<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
-<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
-<p>删除：</p>
-<p><code>DROP INDEX [索引名] ON 表名;</code></p>
-<p>查看：</p>
-<p><code>SHOW INDEX FROM 表名\G</code></p>
-<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
-<ol>
-<li><p>主键自动创建</p>
-</li>
-<li><p>频繁作为查找条件的字段</p>
-</li>
-<li><p>查询中与其他表关联的字段</p>
-</li>
-<li><p>频繁更新的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
-</li>
-<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
-</li>
-<li><p>查询中统计或分组的字段</p>
-</li>
-</ol>
-<p><strong>那些不要建立索引：</strong></p>
-<ol>
-<li>表记录太少</li>
-<li>经常增删改的表</li>
-<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
-</ol>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
-
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
-
-<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
-<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
-<blockquote>
-<p>CPU：数据装入或读取</p>
-<p>IO：装入数据远大于内存</p>
-<p>服务器：用  top、free、等命令查看系统性能</p>
-</blockquote>
-<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
-<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
-<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
-
-<p><strong>各字段解释：</strong></p>
-<ul>
-<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
-<blockquote>
-<p>Id相同的情况下，执行顺序为从上到下</p>
-<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
-<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
-</blockquote>
-</li>
-<li><p><strong>select_type:</strong></p>
-<blockquote>
-<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
-<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
-<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
-<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
-<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
-<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
-</blockquote>
-</li>
-<li><p><strong>type：</strong></p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
-
-<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
-<blockquote>
-<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
-<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
-
-<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
-
-<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
-
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
-
-<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
-<p><img src="/Sql%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/Sql%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
-<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
-
-<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
-<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
-
-<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
-</blockquote>
-</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
-    <title>SQL高级</title>
-    <url>/2022/03/11/SQL%E9%AB%98%E7%BA%A7/</url>
-    <content><![CDATA[<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
-<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
-
-<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
-<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
-<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
-<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
-<p><strong>复合索引：</strong>一个索引有多个列。</p>
-<p><strong>基本语法：</strong></p>
-<p>创建：</p>
-<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
-<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
-<p>删除：</p>
-<p><code>DROP INDEX [索引名] ON 表名;</code></p>
-<p>查看：</p>
-<p><code>SHOW INDEX FROM 表名\G</code></p>
-<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
-<ol>
-<li><p>主键自动创建</p>
-</li>
-<li><p>频繁作为查找条件的字段</p>
-</li>
-<li><p>查询中与其他表关联的字段</p>
-</li>
-<li><p>频繁更新的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
-</li>
-<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
-</li>
-<li><p>查询中统计或分组的字段</p>
-</li>
-</ol>
-<p><strong>那些不要建立索引：</strong></p>
-<ol>
-<li>表记录太少</li>
-<li>经常增删改的表</li>
-<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
-</ol>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
-
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
-
-<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
-<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
-<blockquote>
-<p>CPU：数据装入或读取</p>
-<p>IO：装入数据远大于内存</p>
-<p>服务器：用  top、free、等命令查看系统性能</p>
-</blockquote>
-<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
-<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
-<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
-
-<p><strong>各字段解释：</strong></p>
-<ul>
-<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
-<blockquote>
-<p>Id相同的情况下，执行顺序为从上到下</p>
-<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
-<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
-</blockquote>
-</li>
-<li><p><strong>select_type:</strong></p>
-<blockquote>
-<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
-<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
-<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
-<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
-<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
-<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
-</blockquote>
-</li>
-<li><p><strong>type：</strong></p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
-
-<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
-<blockquote>
-<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
-<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
-
-<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
-
-<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
-
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
-
-<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
-<p><img src="/SQL%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/SQL%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
-<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
-
-<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
-
-<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
-</blockquote>
-</li>
-</ul>
-]]></content>
   </entry>
 </search>
