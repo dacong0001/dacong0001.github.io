@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/123.jpg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/123.jpg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/123.jpg">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="索引索引：排好序的快速查找数据结构 BTree索引：（多路搜索树，不一定是二叉树）   ​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。 索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大葱的笔记">
+<meta property="og:url" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/index.html">
+<meta property="og:site_name" content="大葱的笔记">
+<meta property="og:description" content="索引索引：排好序的快速查找数据结构 BTree索引：（多路搜索树，不一定是二叉树）   ​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。 索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646643638713.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647186242.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647196566.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646646266255.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650823623.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651068930.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650906856.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650941814.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651027958.png">
+<meta property="og:image" content="http://example.com/Sql%E9%AB%98%E7%BA%A7/1646651193641.png">
+<meta property="og:image" content="http://example.com/Sql%E9%AB%98%E7%BA%A7/1646651197122.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651286936.png">
+<meta property="og:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651319155.png">
+<meta property="article:published_time" content="2022-03-11T04:54:08.386Z">
+<meta property="article:modified_time" content="2022-03-07T14:12:15.876Z">
+<meta property="article:author" content="Dacong001">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646643638713.png">
+
+<link rel="canonical" href="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | 大葱的笔记</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="大葱的笔记" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">大葱的笔记</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">大数据</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">3</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">7</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/123.jpg">
+      <meta itemprop="name" content="Dacong001">
+      <meta itemprop="description" content="菜鸡的学习过程">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大葱的笔记">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-03-11 12:54:08" itemprop="dateCreated datePublished" datetime="2022-03-11T12:54:08+08:00">2022-03-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-07 22:12:15" itemprop="dateModified" datetime="2022-03-07T22:12:15+08:00">2022-03-07</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
+<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
+
+<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
+<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
+<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
+<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
+<p><strong>复合索引：</strong>一个索引有多个列。</p>
+<p><strong>基本语法：</strong></p>
+<p>创建：</p>
+<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
+<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
+<p>删除：</p>
+<p><code>DROP INDEX [索引名] ON 表名;</code></p>
+<p>查看：</p>
+<p><code>SHOW INDEX FROM 表名\G</code></p>
+<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
+<ol>
+<li><p>主键自动创建</p>
+</li>
+<li><p>频繁作为查找条件的字段</p>
+</li>
+<li><p>查询中与其他表关联的字段</p>
+</li>
+<li><p>频繁更新的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
+</li>
+<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
+</li>
+<li><p>查询中统计或分组的字段</p>
+</li>
+</ol>
+<p><strong>那些不要建立索引：</strong></p>
+<ol>
+<li>表记录太少</li>
+<li>经常增删改的表</li>
+<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
+</ol>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
+
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
+
+<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
+<blockquote>
+<p>CPU：数据装入或读取</p>
+<p>IO：装入数据远大于内存</p>
+<p>服务器：用  top、free、等命令查看系统性能</p>
+</blockquote>
+<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
+<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
+<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
+
+<p><strong>各字段解释：</strong></p>
+<ul>
+<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
+<blockquote>
+<p>Id相同的情况下，执行顺序为从上到下</p>
+<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
+<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
+</blockquote>
+</li>
+<li><p><strong>select_type:</strong></p>
+<blockquote>
+<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
+<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
+<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
+<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
+<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
+<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
+</blockquote>
+</li>
+<li><p><strong>type：</strong></p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
+
+<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
+<blockquote>
+<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
+<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
+
+<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
+
+<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
+
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
+
+<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
+<p><img src="/Sql%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/Sql%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
+<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
+
+<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
+
+<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
+</blockquote>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Dacong001
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2022/03/11/Sql%E9%AB%98%E7%BA%A7/" title="">http://example.com/2022/03/11/Sql高级/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/" rel="prev" title="SQL基础">
+      <i class="fa fa-chevron-left"></i> SQL基础
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95"><span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BTree%E7%B4%A2%E5%BC%95%EF%BC%9A"><span class="nav-text">BTree索引：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="nav-text">索引分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%84"><span class="nav-text">索引结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#B-Tree%E4%B8%8EB-Tree-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-text">B+Tree与B-Tree 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="nav-text">性能分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Explain"><span class="nav-text">Explain</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%BD%E5%B9%B2%E5%98%9B%EF%BC%9A"><span class="nav-text">能干嘛：</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Dacong001"
+      src="/images/123.jpg">
+  <p class="site-author-name" itemprop="name">Dacong001</p>
+  <div class="site-description" itemprop="description">菜鸡的学习过程</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dacong0001" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dacong0001" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://blog.csdn.net/weixin_50739598" title="CSDN → https:&#x2F;&#x2F;blog.csdn.net&#x2F;weixin_50739598" rel="noopener" target="_blank"><i class="crosshairs fa-fw"></i>CSDN</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1451856375&auto=1&height=66"></iframe>
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">大葱</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">35k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">32 分钟</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+</body>
+</html>
