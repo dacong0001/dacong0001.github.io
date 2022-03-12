@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>SQL基础</title>
+    <url>/2022/03/09/SQL%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="MYSQL函数"><a href="#MYSQL函数" class="headerlink" title="MYSQL函数"></a>MYSQL函数</h1><p><code>select 函数名（） from 表 </code></p>
+<h2 id="单行函数："><a href="#单行函数：" class="headerlink" title="单行函数："></a><strong>单行函数：</strong></h2><h3 id="字符函数："><a href="#字符函数：" class="headerlink" title="字符函数："></a>字符函数：</h3><ul>
+<li>length（str）：返回参数值的字节个数</li>
+<li>concat（str1，‘-‘，str2）： 拼接字符串</li>
+<li>upper：转大写</li>
+<li>lower：转小写</li>
+<li>substr（str，num1,num2）（str，num）：截取字符串</li>
+<li>instr（str1，str2）：返回str2在str1里的起始索引，找不到返回0</li>
+<li>trim（str）（c from str）：去前后空格（c）</li>
+<li>lpad（str，num，c）：用指定的字符实现<font color='red'>左</font>填充指定长度</li>
+<li>rpad（str，num，c）：用指定的字符实现<font color='red'>右</font>填充指定长度</li>
+<li>replace（str1，str2，str3）：用str3替换str1里面存在的str2字符串</li>
+</ul>
+<h3 id="数学函数："><a href="#数学函数：" class="headerlink" title="数学函数："></a>数学函数：</h3><ul>
+<li>round（num，x）：四舍五入保留x位小数</li>
+<li>ceil（num）：向上取整，返回&gt;&#x3D;num的最小整数 ，1.0001也是2</li>
+<li>floor（num）:向下取整</li>
+<li>truncate（num，x）：截断，小数后保留x位</li>
+<li>mod（num，x）：取余   相当于  %    num%x</li>
+</ul>
+<h3 id="日期函数："><a href="#日期函数：" class="headerlink" title="日期函数："></a>日期函数：</h3><ul>
+<li><p>now（）：返回当前时间 包括时间</p>
+</li>
+<li><p>curdate（）：返回日期不包含时间</p>
+</li>
+<li><p>curtime（）：返回时间，不包括日期</p>
+</li>
+<li><p>year（now（））：返回年。 月（month、monthname（月名字））） 日   小时  分钟  秒一样</p>
+</li>
+<li><p>str_to_date:将日期格式的字符转换为指定格式 。 <font color='green'>str_to_date(‘9-13-1993’,’%m-%d-%Y’); —-  1993-09-13</font></p>
+<img src="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/1646827945093.png" class="" width="1646827945093">
+
+
+</li>
+<li><p>date_format:将日期转换为字符串     <font color='green'>date_format(now(),’%y年%每月%d日’)；   22年09月09日</font>其他函数：</p>
+</li>
+<li><p>version():查看版本号</p>
+</li>
+<li><p>database（）：查看当前数据库</p>
+</li>
+<li><p>user（）：查看当前用户</p>
+</li>
+</ul>
+<h3 id="流程控制函数："><a href="#流程控制函数：" class="headerlink" title="流程控制函数："></a>流程控制函数：</h3><ul>
+<li><p>if函数：if   else    的效果</p>
+<p><font color='green'>select if （10 &gt; 5  ,’da’,’xiao’);     da</font>\</p>
+</li>
+<li><p>case函数     <font color='green'>select  原始工资，dep_id，case dep_id when 30 then salary * 1.1 when 40 then salary*1.2 else salary end as 新工资 from emp；</font></p>
+</li>
+</ul>
+<h2 id="分组函数："><a href="#分组函数：" class="headerlink" title="分组函数："></a>分组函数：</h2><p>用做统计使用，又称聚合函数或组函数</p>
+<p>有  <font color='green'> sum  avg  count max  min </font>。</p>
+<p>特点：</p>
+<ul>
+<li>sum，avg一般用于处理数值函数</li>
+<li>max ，min，count 可 用于任何函数</li>
+<li>所有分组函数都忽略null值</li>
+<li>可以和distinct（去重）搭配：<ul>
+<li><font color='green'>select sum(distinct salary) ,sum(salary) from emp;    39666    1520</font></li>
+</ul>
+</li>
+<li>count函数的详细介绍<ul>
+<li>count(*) 查询总行数  count（常量） 也是统计总行数，其就是添加了一列都是常量</li>
+<li>MYISAM存储下，count（*）的效率高  INNODB存储下  count(**)与 count(1)一样</li>
+</ul>
+</li>
+<li>和分组函数一同查询的字段有限制，要求是group  by  后的字段</li>
+</ul>
+<h2 id="分页查询（limit）："><a href="#分页查询（limit）：" class="headerlink" title="分页查询（limit）："></a>分页查询（limit）：</h2><p>应用场景：当要显示的数据，一页显示不全，需要分页提交sql请求。</p>
+<p>limit（offset，size）：offset要显示的起始索引<font color='red'>（从0开始）</font>，size要显示的条目个数</p>
+<p><strong>特点：</strong></p>
+<ul>
+<li>limit语句要放在查询的最后</li>
+<li>公式：<ul>
+<li>要显示的页数page，每页的条目数size。 select 查询列表  from  表  limit （page-1）*size，size；</li>
+</ul>
+</li>
+</ul>
+<p>查询语句中的关键字和顺序：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *         7</span><br><span class="line">from 表          1</span><br><span class="line">join 表2         2</span><br><span class="line">on 连接条件       3</span><br><span class="line">where  筛选条件   4</span><br><span class="line">group by 字段    5</span><br><span class="line">having  筛选条    6</span><br><span class="line">order by  字     8</span><br><span class="line">limit            9</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+  </entry>
+  <entry>
     <title>Hadoop 生产调优手册</title>
     <url>/2022/03/06/Hadoop%EF%BC%88%E7%94%9F%E4%BA%A7%E8%B0%83%E4%BC%98%E6%89%8B%E5%86%8C%EF%BC%89/</url>
     <content><![CDATA[<h2 id="HDFS—核心参数"><a href="#HDFS—核心参数" class="headerlink" title="HDFS—核心参数"></a>HDFS—核心参数</h2><h3 id="NameNode-内存生产配置"><a href="#NameNode-内存生产配置" class="headerlink" title="NameNode 内存生产配置"></a>NameNode 内存生产配置</h3><p><strong>1）NameNode 内存计算</strong><br>    每个文件块大概占用 150byte，一台服务器 128G 内存为例，能存储多少文件块呢？<br>128 * 1024 * 1024 * 1024 &#x2F; 150Byte ≈ 9.1 亿</p>
@@ -155,97 +243,119 @@
       </tags>
   </entry>
   <entry>
-    <title>SQL基础</title>
-    <url>/2022/03/09/SQL%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="MYSQL函数"><a href="#MYSQL函数" class="headerlink" title="MYSQL函数"></a>MYSQL函数</h1><p><code>select 函数名（） from 表 </code></p>
-<h2 id="单行函数："><a href="#单行函数：" class="headerlink" title="单行函数："></a><strong>单行函数：</strong></h2><h3 id="字符函数："><a href="#字符函数：" class="headerlink" title="字符函数："></a>字符函数：</h3><ul>
-<li>length（str）：返回参数值的字节个数</li>
-<li>concat（str1，‘-‘，str2）： 拼接字符串</li>
-<li>upper：转大写</li>
-<li>lower：转小写</li>
-<li>substr（str，num1,num2）（str，num）：截取字符串</li>
-<li>instr（str1，str2）：返回str2在str1里的起始索引，找不到返回0</li>
-<li>trim（str）（c from str）：去前后空格（c）</li>
-<li>lpad（str，num，c）：用指定的字符实现<font color='red'>左</font>填充指定长度</li>
-<li>rpad（str，num，c）：用指定的字符实现<font color='red'>右</font>填充指定长度</li>
-<li>replace（str1，str2，str3）：用str3替换str1里面存在的str2字符串</li>
-</ul>
-<h3 id="数学函数："><a href="#数学函数：" class="headerlink" title="数学函数："></a>数学函数：</h3><ul>
-<li>round（num，x）：四舍五入保留x位小数</li>
-<li>ceil（num）：向上取整，返回&gt;&#x3D;num的最小整数 ，1.0001也是2</li>
-<li>floor（num）:向下取整</li>
-<li>truncate（num，x）：截断，小数后保留x位</li>
-<li>mod（num，x）：取余   相当于  %    num%x</li>
-</ul>
-<h3 id="日期函数："><a href="#日期函数：" class="headerlink" title="日期函数："></a>日期函数：</h3><ul>
-<li><p>now（）：返回当前时间 包括时间</p>
-</li>
-<li><p>curdate（）：返回日期不包含时间</p>
-</li>
-<li><p>curtime（）：返回时间，不包括日期</p>
-</li>
-<li><p>year（now（））：返回年。 月（month、monthname（月名字））） 日   小时  分钟  秒一样</p>
-</li>
-<li><p>str_to_date:将日期格式的字符转换为指定格式 。 <font color='green'>str_to_date(‘9-13-1993’,’%m-%d-%Y’); —-  1993-09-13</font></p>
-<img src="/2022/03/09/SQL%E5%9F%BA%E7%A1%80/1646827945093.png" class="" width="1646827945093">
-
-
-</li>
-<li><p>date_format:将日期转换为字符串     <font color='green'>date_format(now(),’%y年%每月%d日’)；   22年09月09日</font>其他函数：</p>
-</li>
-<li><p>version():查看版本号</p>
-</li>
-<li><p>database（）：查看当前数据库</p>
-</li>
-<li><p>user（）：查看当前用户</p>
-</li>
-</ul>
-<h3 id="流程控制函数："><a href="#流程控制函数：" class="headerlink" title="流程控制函数："></a>流程控制函数：</h3><ul>
-<li><p>if函数：if   else    的效果</p>
-<p><font color='green'>select if （10 &gt; 5  ,’da’,’xiao’);     da</font>\</p>
-</li>
-<li><p>case函数     <font color='green'>select  原始工资，dep_id，case dep_id when 30 then salary * 1.1 when 40 then salary*1.2 else salary end as 新工资 from emp；</font></p>
-</li>
-</ul>
-<h2 id="分组函数："><a href="#分组函数：" class="headerlink" title="分组函数："></a>分组函数：</h2><p>用做统计使用，又称聚合函数或组函数</p>
-<p>有  <font color='green'> sum  avg  count max  min </font>。</p>
-<p>特点：</p>
-<ul>
-<li>sum，avg一般用于处理数值函数</li>
-<li>max ，min，count 可 用于任何函数</li>
-<li>所有分组函数都忽略null值</li>
-<li>可以和distinct（去重）搭配：<ul>
-<li><font color='green'>select sum(distinct salary) ,sum(salary) from emp;    39666    1520</font></li>
-</ul>
-</li>
-<li>count函数的详细介绍<ul>
-<li>count(*) 查询总行数  count（常量） 也是统计总行数，其就是添加了一列都是常量</li>
-<li>MYISAM存储下，count（*）的效率高  INNODB存储下  count(**)与 count(1)一样</li>
-</ul>
-</li>
-<li>和分组函数一同查询的字段有限制，要求是group  by  后的字段</li>
-</ul>
-<h2 id="分页查询（limit）："><a href="#分页查询（limit）：" class="headerlink" title="分页查询（limit）："></a>分页查询（limit）：</h2><p>应用场景：当要显示的数据，一页显示不全，需要分页提交sql请求。</p>
-<p>limit（offset，size）：offset要显示的起始索引<font color='red'>（从0开始）</font>，size要显示的条目个数</p>
-<p><strong>特点：</strong></p>
-<ul>
-<li>limit语句要放在查询的最后</li>
-<li>公式：<ul>
-<li>要显示的页数page，每页的条目数size。 select 查询列表  from  表  limit （page-1）*size，size；</li>
-</ul>
-</li>
-</ul>
-<p>查询语句中的关键字和顺序：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">select *         7</span><br><span class="line">from 表          1</span><br><span class="line">join 表2         2</span><br><span class="line">on 连接条件       3</span><br><span class="line">where  筛选条件   4</span><br><span class="line">group by 字段    5</span><br><span class="line">having  筛选条    6</span><br><span class="line">order by  字     8</span><br><span class="line">limit            9</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-  </entry>
-  <entry>
     <title>SQL窗口函数</title>
     <url>/2022/03/12/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="窗口函数："><a href="#窗口函数：" class="headerlink" title="窗口函数："></a>窗口函数：</h1>]]></content>
+  </entry>
+  <entry>
+    <title>Sql高级</title>
+    <url>/2022/03/11/Sql%E9%AB%98%E7%BA%A7/</url>
+    <content><![CDATA[<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
+<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
+
+<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
+<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
+<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
+<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
+<p><strong>复合索引：</strong>一个索引有多个列。</p>
+<p><strong>基本语法：</strong></p>
+<p>创建：</p>
+<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
+<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
+<p>删除：</p>
+<p><code>DROP INDEX [索引名] ON 表名;</code></p>
+<p>查看：</p>
+<p><code>SHOW INDEX FROM 表名\G</code></p>
+<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
+<ol>
+<li><p>主键自动创建</p>
+</li>
+<li><p>频繁作为查找条件的字段</p>
+</li>
+<li><p>查询中与其他表关联的字段</p>
+</li>
+<li><p>频繁更新的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
+</li>
+<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
+</li>
+<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
+</li>
+<li><p>查询中统计或分组的字段</p>
+</li>
+</ol>
+<p><strong>那些不要建立索引：</strong></p>
+<ol>
+<li>表记录太少</li>
+<li>经常增删改的表</li>
+<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
+</ol>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
+
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
+
+<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
+<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
+<blockquote>
+<p>CPU：数据装入或读取</p>
+<p>IO：装入数据远大于内存</p>
+<p>服务器：用  top、free、等命令查看系统性能</p>
+</blockquote>
+<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
+<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
+<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
+
+<p><strong>各字段解释：</strong></p>
+<ul>
+<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
+<blockquote>
+<p>Id相同的情况下，执行顺序为从上到下</p>
+<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
+<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
+</blockquote>
+</li>
+<li><p><strong>select_type:</strong></p>
+<blockquote>
+<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
+<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
+<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
+<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
+<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
+<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
+</blockquote>
+</li>
+<li><p><strong>type：</strong></p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
+
+<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
+<blockquote>
+<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
+<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
+
+<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
+
+<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
+
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
+
+<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
+<p><img src="/Sql%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/Sql%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
+<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
+
+<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
+<img src="/2022/03/11/Sql%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
+
+<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
+</blockquote>
+</li>
+</ul>
+]]></content>
   </entry>
   <entry>
     <title>Hadoop</title>
@@ -518,116 +628,6 @@
       <tags>
         <tag>Hadoop</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>SQL高级</title>
-    <url>/2022/03/11/SQL%E9%AB%98%E7%BA%A7/</url>
-    <content><![CDATA[<h1 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h1><p>索引：<font color='red'>排好序的快速查找数据结构</font></p>
-<h2 id="BTree索引："><a href="#BTree索引：" class="headerlink" title="BTree索引："></a>BTree索引：</h2><p>（多路搜索树，不一定是二叉树）</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646643638713.png" class="" width="1646643638713">
-
-<p>​    每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样可以运用二分查找在一定的复杂度内获取到相应数据，从而    快速的检索出符合条件的记录。</p>
-<p>索引的劣势：虽然提高了速度，但是降低了表更新的速度，例如INSTER 、UPDATE 、DELETE。如果有大量的表，就要花时间研究最优秀的索引</p>
-<h3 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h3><p><strong>单值索引：</strong>一个索引只包含单个列，一个表可以有多个单值索引。</p>
-<p><strong>唯一索引：</strong>索引列的值必须唯一，但允许空值。</p>
-<p><strong>复合索引：</strong>一个索引有多个列。</p>
-<p><strong>基本语法：</strong></p>
-<p>创建：</p>
-<p><code>CREAT [UNIQUE] INDEX 索引名 ON 表名(字段（长度）);</code></p>
-<p><code>ALTER 表名 ADD [UNIQUE] INDEX [索引名] ON (字段（长度）);</code></p>
-<p>删除：</p>
-<p><code>DROP INDEX [索引名] ON 表名;</code></p>
-<p>查看：</p>
-<p><code>SHOW INDEX FROM 表名\G</code></p>
-<h3 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h3><p><strong>那些情况需要建立索引：</strong></p>
-<ol>
-<li><p>主键自动创建</p>
-</li>
-<li><p>频繁作为查找条件的字段</p>
-</li>
-<li><p>查询中与其他表关联的字段</p>
-</li>
-<li><p>频繁更新的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>Where条件里用不到的字段<font color='red'>不适用</font></p>
-</li>
-<li><p>单键&#x2F;组合索引选择（高并发下创建组合索引）</p>
-</li>
-<li><p>查询排序的字段，排序字段若通过索引会大大提高素速度</p>
-</li>
-<li><p>查询中统计或分组的字段</p>
-</li>
-</ol>
-<p><strong>那些不要建立索引：</strong></p>
-<ol>
-<li>表记录太少</li>
-<li>经常增删改的表</li>
-<li>数据重复且平均分布的字段，没有太大的实际效果（男女，国籍，等等）</li>
-</ol>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647186242.png" class="" width="1646647186242">
-
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646647196566.png" class="" width="1646647196566">
-
-<h3 id="B-Tree与B-Tree-的区别"><a href="#B-Tree与B-Tree-的区别" class="headerlink" title="B+Tree与B-Tree 的区别"></a>B+Tree与B-Tree 的区别</h3><p>　1）B-树的<font color='red'>关键字和记录是放在一起的</font>，叶子节点可以看作外部节点，不包含任何信息；B+树的非叶子节点中只有关键字和指向下一个节点的索引，<font color='red'>记录只放在叶子节点中</font>。<br>　 2）在B-树中，<font color='red'>越靠近根节点的记录查找时间越快</font>，只要找到关键字即可确定记录的存在；而B+树中每个记录的<font color='red'>查找时间基本是一样的</font>，都需要从根节点走到叶子节点，而且在叶子节点中还要再比较关键字。从这个角度看B-树的性能好像要比B+树好，而在实际应用中却是B+树的性能要好些。因为B+树的非叶子节点不存放实际的数据，这样每个节点可容纳的<font color='red'>元素个数比B-树多，树高比B-树小</font>，这样带来的好处是减少磁盘访问次数。尽管B+树找到一个记录所需的比较次数要比B-树多，但是一次磁盘访问的时间相当于成百上千次内存比较的时间，因此实际中B+树的性能可能还会好些，而且B+树的叶子节点使用指针连接在一起，方便顺序遍历（例如查看一个目录下的所有文件，一个表中的所有记录等），这也是很多数据库和文件系统使用B+树的缘故。<br>　<br>思考：为什么说B+树比B-树更适合实际应用中操作系统的文件索引和数据库索引？<br><strong>1) B+树的磁盘读写代价更低</strong><br>　　B+树的内部结点并没有指向关键字具体信息的指针。因此其内部结点相对B 树更小。如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。<br><strong>2) B+树的查询效率更加稳定</strong><br>　　由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
-<h3 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h3><p>Mysq常见瓶颈</p>
-<blockquote>
-<p>CPU：数据装入或读取</p>
-<p>IO：装入数据远大于内存</p>
-<p>服务器：用  top、free、等命令查看系统性能</p>
-</blockquote>
-<h2 id="Explain"><a href="#Explain" class="headerlink" title="Explain"></a>Explain</h2><p>​    使用EXPLAIN关键字可以模拟优化器执行SQL查询语句，从而知道MySQL是如何处理你的SQL语句的。分析你的查询语句或是表结构的性能瓶颈。</p>
-<p><strong>用法：</strong>  <code>explain select * from emp;</code>    explain + Sql 语句</p>
-<h3 id="能干嘛："><a href="#能干嘛：" class="headerlink" title="能干嘛："></a>能干嘛：</h3><img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646646266255.png" class="" width="1646646266255">
-
-<p><strong>各字段解释：</strong></p>
-<ul>
-<li><p><strong>id：</strong>select 查询的序列号，包含一组数字，查询select字句或操作表的顺序</p>
-<blockquote>
-<p>Id相同的情况下，执行顺序为从上到下</p>
-<p>Id不同，按照id顺序执行id值越大，越先执行。</p>
-<p>Id相同不同 ，同时存在：id如果相同，可以认为是一组，从上往下顺序执行;在所有组中，id值越大，优先级越高，越先执行</p>
-</blockquote>
-</li>
-<li><p><strong>select_type:</strong></p>
-<blockquote>
-<p>**SIMPLE:**简单的查询，不包含子查询或UNION</p>
-<p><strong>PRIMARY：</strong> 查询中包含子查询</p>
-<p><strong>SUBQUERY：</strong>在select或where中包含子查询</p>
-<p><strong>DERIVED：</strong>在FROM列表中包含的子查询被标记为DERIVED(衍生)MySQL会递归执行这些子查询, 把结果放在临时表里。</p>
-<p><strong>UNION：</strong>若第二个SELECT出现在UNION之后，则被标记为UNION；若UNION包含在FROM子句的子查询中,外层SELECT将被标记为：DERIVED</p>
-<p><strong>UNION RESULT：</strong>从UNION表获取结果的SELECT</p>
-</blockquote>
-</li>
-<li><p><strong>type：</strong></p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650823623.png" class="" width="1646650823623">
-
-<p><font color='red'>从最好到最差依次是：</font><br>system&gt;const&gt;eq_ref&gt;ref&gt;range&gt;index&gt;ALL</p>
-<blockquote>
-<p><strong>system：</strong>表只有一行记录（等于系统表），这是const类型的特列，平时不会出现，这个也可以忽略不计</p>
-<p><strong>const：</strong>表示通过索引一次就找到了,const用于比较primary key或者unique索引。因为只匹配一行数据，所以很快如将主键置于where列表中，MySQL就能将该查询转换为一个常量</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651068930.png" class="" width="1646651068930">
-
-<p><strong>eq_ref：</strong>唯一性索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键或唯一索引扫描</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650906856.png" class="" width="1646650906856">
-
-<p>**ref:**非唯一性索引扫描，返回匹配某个单独值的所有行.本质上也是一种索引访问，它返回所有匹配某个单独值的行，然而，它可能会找到多个符合条件的行，所以他应该属于查找和扫描的混合体.</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646650941814.png" class="" width="1646650941814">
-
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651027958.png" class="" width="1646651027958">
-
-<p>**<font color='orange'>range</font>:**只检索给定范围的行,使用一个索引来选择行。key 列显示使用了哪个索引一般就是在你的where语句中出现了between、&lt;、&gt;、in等的查询这种范围扫描索引扫描比全表扫描要好，因为它只需要开始于索引的某一点，而结束语另一点，不用扫描全部索引。<font color='cornflowerblue'>只扫描了一部分索引</font></p>
-<p><img src="/SQL%E9%AB%98%E7%BA%A7/1646651193641.png" alt="1646651193641"><img src="/SQL%E9%AB%98%E7%BA%A7/1646651197122.png" alt="1646651197122"></p>
-<p>**<font color='green'>index</font>:**出现index是sql使用了索引但是<font color='red'>没用通过索引进行过滤</font>，一般是使用了<font color='red'>覆盖索引</font>或者是<font color='red'>利用索引进行了排序分组</font>。<font color='cornflowerblue'>扫描了所有索引</font></p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651286936.png" class="" width="1646651286936">
-
-<p>**<font color='cornflowerblue'>all</font>:**Full Table Scan，将遍历全表以找到匹配的行</p>
-<img src="/2022/03/11/SQL%E9%AB%98%E7%BA%A7/1646651319155.png" class="" width="1646651319155">
-
-<p><strong><font color='red'>备注：一般来说，得保证查询至少达到range级别，最好能达到ref。</font></strong></p>
-</blockquote>
-</li>
-</ul>
-]]></content>
   </entry>
   <entry>
     <title>链表，二叉树</title>
